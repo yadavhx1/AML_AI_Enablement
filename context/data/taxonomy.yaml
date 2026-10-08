@@ -454,7 +454,7 @@ terms:
   type: system_name
   definition: 'The five independent notebooks in scripts/Notebooks: AML_LOT_TX_TABLE, AML_LOT_SOB_EPISODE,
     AML_LOT_REGIMEN, AML_LOT_PATIENT_INTENSITY_LOT, AML_PATIENT_ELIGIBILITY. One KBT each. The sixth notebook,
-    AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated, builds the NPS dashboard (KBT 6).'
+    AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated, builds the NPS dashboard (no KBT of its own; metric nps_dashboard_legacy, KBT 4).'
   status: defined
   source: scripts/Notebooks
 - term: exc_dt

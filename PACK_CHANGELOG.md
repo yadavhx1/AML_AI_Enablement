@@ -15,6 +15,52 @@
 - **pldlib and the SOB/episode/regimen SQL:** `scripts/pldlib/`.
 - **SME answers:** `context/assumptions/sme_answers_reused.md`.
 
+## Response provenance log (2026-10-08)
+
+- New `context/response_provenance.md`: every answer ends with a `How this answer was generated` table.
+  Its rows cover prior context reused (CLAUDE.md, earlier turns, IDE selection), the KBT skill, files opened,
+  verified queries (as-is / adapted / pattern only), data tables, execution status, assumptions (basis by
+  priority level + effect) and outputs written.
+- The same entry is appended to `outputs/response_log.md` (append-only; tracked in git through a
+  `.gitignore` exception). Analysis folder READMEs carry it under `## Provenance`.
+- `CLAUDE.md`: new "Response provenance" section. "Final response format" allows the provenance
+  table as the only account of the working process; the other rules against narration still apply.
+  "Generated files" names the log.
+- Output contracts in the five KBT skills and `nps_dashboard_legacy.md` point to the table.
+- `README.md`, `outputs/README.md` updated. `tools/validate_pack.py`: CLAUDE.md limit 130 -> 145 lines;
+  `context/response_provenance.md` is a core file.
+
+## VENCLEXTA deck template and kit added (2026-10-08)
+
+- New folder `deck/`: `VEN_TEMPLATE.pptx` (brand template) and `slide_kit_ven.py` (VEN team kit), both copied
+  verbatim; `example_deck_original.py` (the team's CLL example, as received).
+- `deck/output_style_deck.py` (new): `new_deck()`, `carry_lines()`, `sort_categories()`, `out_path()` and the
+  AML category orders (LoT, cohort, backbone group, account group from `config/nps_dashboard_legacy.yaml`).
+  The team example imported this module but it was not supplied; it is written for this pack.
+- `deck/example_deck.py`: the example adapted to AML placeholders; runs from any directory and writes to
+  `outputs/_scratch/`. Saves 4 slides with 0 layout warnings.
+- `deck/README.md`: how to build a deck and the rules (template only, native charts, TBD for unknowns,
+  footer on every slide, 0 save warnings, output location).
+- `CLAUDE.md` (Generated files), `README.md`, `outputs/README.md`: every `.pptx` uses the kit.
+  `tools/validate_pack.py` checks the kit files exist and that `deck/` paths in docs resolve.
+
+## NPS KBT removed; NPS covered by metrics (2026-10-08)
+
+- Deleted the KBT 6 skill (`.claude/skills/kbt-06-nps-dashboard-legacy/`). There is no separate NPS KBT.
+- Its method, working defaults, context list, minimum QC and output contract moved into
+  `context/metrics/nps_dashboard_legacy.md`, which is now the single reference for NPS dashboard questions.
+  `nps_count.md` still covers line-1 starts.
+- NPS questions run under KBT 4 (lines and intensity) and borrow the KBT 5 gates. The KBT 4 skill
+  description, intent, context list and verified-query candidates now name the NPS dashboard.
+- The 8 NPS verified queries moved from the former kbt-06 query folder to `verified_queries/nps_dashboard/`;
+  `index.tsv` and the file headers now give primary KBT 4, secondary KBT 5. SQL bodies are unchanged.
+- Updated references: `CLAUDE.md`, `README.md`, `kbts/index.md`, `evals/` (the four NPS prompts now expect
+  KBT 4), `context/metrics/index.tsv`, `context/data/README.md`, the seven NPS dashboard table profiles,
+  `taxonomy.yaml`, `key_concepts.md`, `nps_count.md`, `workflows/aml_nps_dashboard_legacy.md`,
+  `verified_queries/README.md`, `config/common.yaml` and `tools/check_config.py` comments.
+- `tools/validate_pack.py` now expects five KBTs. The NPS dashboard notebook, its config and its workflow
+  are unchanged.
+
 ## Answer-only responses (2026-10-07)
 
 - `CLAUDE.md` "Final response format" forbids narrating the working process (preambles, interim
@@ -108,7 +154,7 @@
 - Added `scripts/Notebooks/AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb` from the team, code unchanged. Saved
   outputs were cleared because four cells printed patient identifiers. It runs after
   AML_LOT_PATIENT_INTENSITY_LOT and reads the final eligibility flags.
-- New KBT 6 `kbt-06-nps-dashboard-legacy`, with 8 verified queries in `verified_queries/kbt-06/`. Two are
+- New KBT 6 `kbt-06-nps-dashboard-legacy`, with 8 verified queries in verified_queries/kbt-06 (now removed). Two are
   SQL equivalents: the line backbone (a pandas step) and the flag join (a PySpark step).
 - Separate workflow `workflows/aml_nps_dashboard_legacy.md`. The base-layer refresh points to it.
 - New config `config/nps_dashboard_legacy.yaml` (checked by `tools/check_config.py`), metric

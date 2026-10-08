@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_REG_NPI_ACI
 -- QUESTION: Which HCP is the initiating prescriber of each AML line in the NPS dashboard?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: Joins each line to its backbone-product claims inside the line dates; the NPI on the first backbone claim (date ASC, NPI DESC, claim id) becomes NPI_REGIMEN, mapped to the Abbott customer id.
 -- DATA_SOURCE: SHA (SHA_PTD)

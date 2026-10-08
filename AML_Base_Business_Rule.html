@@ -313,8 +313,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 
 <nav class="toc" id="tocnav">
   <a href="#s1">What this is</a><a href="#s2">The pipeline</a><a href="#s3">Who's a patient</a>
-  <a href="#s4">Drugs in scope</a><a href="#s5">DOS &amp; Grace</a><a href="#s6">Regimens</a>
-  <a href="#s7">New line?</a><a href="#s8">Patient intensity</a><a href="#s9">Cytarabine split</a>
+  <a href="#s4">Drugs in scope</a><a href="#s5">DOS &amp; Grace</a><a href="#s6">Cytarabine split</a>
+  <a href="#s7">Regimens</a><a href="#s8">New line?</a><a href="#s9">Patient intensity</a>
   <a href="#s10">Eligibility flags</a><a href="#s11">Walk a patient</a>
   <a href="#s12">Glossary</a>
 </nav>
@@ -336,7 +336,6 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
     <div><span>28</span><small>Products tracked across both backbone hierarchies</small></div>
     <div><span>2</span><small>Patient-intensity populations, each with its own hierarchy</small></div>
     <div><span>90d</span><small>Gap that ends a line of therapy</small></div>
-    <div><span>8+</span><small>Eligibility flags gating KPI inclusion</small></div>
     <div><span>1</span><small>Named exception: Venclexta ↔ HMA switches don't end a line</small></div>
   </div>
 
@@ -383,12 +382,9 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
   gate, not a funnel.</p>
 
   <h3>AML diagnosis codes</h3>
-  <p>ICD-10 chapter C92–C94 covers the acute myeloid and related leukemia subtypes used to define this
-  population. ICD-9 never captured the same cytogenetic/subtype granularity, so several ICD-10 codes below
-  collapse onto the same legacy ICD-9 code:</p>
+  <p>The complete set of diagnosis codes used to identify this population, across both ICD-10 (chapter
+  C92–C94) and legacy ICD-9 (code 205):</p>
   <div id="dxchips" style="margin-top:2px"></div>
-  <p style="font-size:12.5px;color:var(--grey);margin-top:12px">ICD-9 (legacy)</p>
-  <div id="dxchips9" style="margin-top:2px"></div>
 
   <h3>What "2+" actually requires</h3>
   <div class="tree">
@@ -410,7 +406,7 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 <section id="s4">
   <h2><span class="no">04</span> Which drugs are in scope</h2>
   <p class="deck">28 products, but patients don't all compete on the same ladder. Which hierarchy applies depends
-  on a separate judgment call — <a href="#s8">patient intensity</a> — made once per patient.</p>
+  on a separate judgment call — <a href="#s9">patient intensity</a> — made once per patient.</p>
 
   <p>When more than one drug is active at once, the <b>backbone</b> is whichever one ranks highest on a fixed
   priority list, and AML runs <b>two different lists</b> depending on whether the patient is intensive-chemo
@@ -429,7 +425,7 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
   DOS/Grace assignment — it can never create or extend an episode, regimen, or line of therapy.</p>
 
   <h4>Cytarabine specifically does not resolve to one product</h4>
-  <p>It splits into three by dose intensity before anything else happens — see <a href="#s9">Section 09</a> for
+  <p>It splits into three by dose intensity before anything else happens — see <a href="#s6">Section 06</a> for
   the full split.</p>
 </section>
 
@@ -444,7 +440,7 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 
   <div class="lead">A claim's coverage window is <b>[claim date, claim date + DOS + Grace]</b>. The next claim
   for the same product, same patient joins the same episode if its date falls inside that window — otherwise
-  a new episode starts. <a href="#s6">Section 06</a> covers what happens next.</div>
+  a new episode starts. <a href="#s7">Section 07</a> covers what happens next.</div>
 
   <h3>DOS: where the number comes from</h3>
   <div class="two">
@@ -477,16 +473,40 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
     </div>
   </div>
 
+</section>
+
+<div class="hr"></div>
+
+<!-- ============ 9. CYTARABINE ============ -->
+<section id="s6">
+  <h2><span class="no">06</span> Cytarabine's three-way split</h2>
+  <p class="deck">One generic drug, three products, by dose. The split happens before DOS and Grace are
+  assigned — cytarabine never exists as a single undifferentiated product downstream of it.</p>
+
+  <table class="tight">
+    <thead><tr><th>Product</th><th>Dose band</th><th class="num">Grace (d)</th><th class="num">DOS – PX (d)</th><th>Typical use</th></tr></thead>
+    <tbody>
+      <tr><td><b>L-DAC</b></td><td>Low-dose</td><td class="num">60</td><td class="num">1</td><td>IC-INELIG maintenance / low-intensity regimens</td></tr>
+      <tr><td><b>S-DAC</b></td><td>Standard-dose</td><td class="num">7</td><td class="num">1</td><td>IC-ELIG induction/consolidation</td></tr>
+      <tr><td><b>HI-DAC</b></td><td>High-dose</td><td class="num">7</td><td class="num">1</td><td>IC-ELIG consolidation</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><span class="tag">Why the split exists</span>Dose intensity is clinically decisive for
+  cytarabine in a way it isn't for most other AML products — low-dose cytarabine is an IC-INELIG backbone in
+  its own right, while standard- and high-dose cytarabine only ever appear on the IC-ELIG hierarchy, bucketed
+  together as <code>S-DAC/HI-DAC</code>. Treating all three as one product would blur a distinction that
+  decides which hierarchy, and which backbone, the patient's line of therapy resolves to.</div>
 
 </section>
 
 <div class="hr"></div>
 
 <!-- ============ 6. REGIMENS ============ -->
-<section id="s6">
-  <h2><span class="no">06</span> Building regimens</h2>
+<section id="s7">
+  <h2><span class="no">07</span> Building regimens</h2>
   <p class="deck">Three mechanical steps turn claims into regimens: Start-of-Bucket, Episode, Regimen. None of
-  the three makes a clinical judgment — that's reserved for line-of-therapy assignment in <a href="#s7">Section 07</a>.</p>
+  the three makes a clinical judgment — that's reserved for line-of-therapy assignment in <a href="#s8">Section 08</a>.</p>
 
   <div class="jx" id="regimenSteps">
     <div class="steps" id="regimenStepsNav"></div>
@@ -499,8 +519,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 <div class="hr"></div>
 
 <!-- ============ 7. NEW LINE ============ -->
-<section id="s7">
-  <h2><span class="no">07</span> When a change is a new line</h2>
+<section id="s8">
+  <h2><span class="no">08</span> When a change is a new line</h2>
   <p class="deck">Two rounds, run in order, for every regimen after the first. One gap test, then — only if the
   gap passes — a backbone-change test with one named exception.</p>
 
@@ -569,8 +589,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 <div class="hr"></div>
 
 <!-- ============ 8. PATIENT INTENSITY ============ -->
-<section id="s8">
-  <h2><span class="no">08</span> Patient intensity, and a rule in transition</h2>
+<section id="s9">
+  <h2><span class="no">09</span> Patient intensity, and a rule in transition</h2>
   <p class="deck">Which backbone hierarchy applies to a patient depends on one classification, made once:
   intensive-chemo eligible (IC-ELIG) or ineligible (IC-INELIG). Two different versions of that classification
   exist in the current codebase side by side.</p>
@@ -598,36 +618,10 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 
 <div class="hr"></div>
 
-<!-- ============ 9. CYTARABINE ============ -->
-<section id="s9">
-  <h2><span class="no">09</span> Cytarabine's three-way split</h2>
-  <p class="deck">One generic drug, three products, by dose. The split happens before DOS and Grace are
-  assigned — cytarabine never exists as a single undifferentiated product downstream of it.</p>
-
-  <table class="tight">
-    <thead><tr><th>Product</th><th>Dose band</th><th class="num">Grace (d)</th><th class="num">DOS – PX (d)</th><th>Typical use</th></tr></thead>
-    <tbody>
-      <tr><td><b>L-DAC</b></td><td>Low-dose</td><td class="num">60</td><td class="num">1</td><td>IC-INELIG maintenance / low-intensity regimens</td></tr>
-      <tr><td><b>S-DAC</b></td><td>Standard-dose</td><td class="num">7</td><td class="num">1</td><td>IC-ELIG induction/consolidation</td></tr>
-      <tr><td><b>HI-DAC</b></td><td>High-dose</td><td class="num">7</td><td class="num">1</td><td>IC-ELIG consolidation</td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout"><span class="tag">Why the split exists</span>Dose intensity is clinically decisive for
-  cytarabine in a way it isn't for most other AML products — low-dose cytarabine is an IC-INELIG backbone in
-  its own right, while standard- and high-dose cytarabine only ever appear on the IC-ELIG hierarchy, bucketed
-  together as <code>S-DAC/HI-DAC</code>. Treating all three as one product would blur a distinction that
-  decides which hierarchy, and which backbone, the patient's line of therapy resolves to.</div>
-
-
-</section>
-
-<div class="hr"></div>
-
 <!-- ============ 11. ELIGIBILITY FLAGS ============ -->
 <section id="s10">
   <h2><span class="no">10</span> Eligibility flags</h2>
-  <p class="deck">Five flags decide which patients a given KPI is even allowed to count. None of them touch
+  <p class="deck">Six flags decide which patients a given KPI is even allowed to count. None of them touch
   the patient pool itself — they're a second gate, applied per-analysis, on top of population membership.</p>
 
   <p>Every flag asks a version of the same question: <b>has this patient been observably active — a
@@ -641,7 +635,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
       before first diagnosis.<br><br>
       <code class="flag">TX_TXL_MX_ELIG_FLG</code> — continuously active on medical claims across the
       patient's full AML treatment span, semester by semester.<br><br>
-      <code class="flag">TX_TXL_RX_ELIG_FLG</code> — the same continuity check, on pharmacy claims.
+      <code class="flag">TX_TXL_RX_ELIG_FLG</code> — the same continuity check, on pharmacy claims.<br><br>
+      <code class="flag">DX_TX_DIFF_FLG</code> — gap between AML's first diagnosis and first treatment is 60 days or less.
     </div>
     <div>
       <div class="cardhd">Anchored to Venclexta start specifically</div>
@@ -724,18 +719,18 @@ var PIPELINE = [
   {st:'STAGE 1', nm:'Claims intake', ct:'Rx + Mx claims pulled for the AML market',
     body:'<p>Every Rx (pharmacy, NCPDP) and Mx (medical, CMS-1500) claim tagged to the AML market is pulled from the combined claims fact table, restricted to the current patient pool (Section 03). Original claim rows are never modified from here on — every later stage only adds columns.</p>'},
   {st:'STAGE 2', nm:'Product resolution', ct:'Every claim resolves to 1 of 28 named products',
-    body:'<p>Raw product/procedure codes map to a single <code>FINAL_PRODUCT_NAME</code>. Cytarabine splits into L-DAC/S-DAC/HI-DAC by dose here (Section 09); Filgrastim is dropped entirely as supportive care (Section 04).</p>'},
+    body:'<p>Raw product/procedure codes map to a single <code>FINAL_PRODUCT_NAME</code>. Cytarabine splits into L-DAC/S-DAC/HI-DAC by dose here (Section 06); Filgrastim is dropped entirely as supportive care (Section 04).</p>'},
   {st:'STAGE 3', nm:'DOS + Grace', ct:'Each claim gets a coverage window',
     body:'<p>Per-product Days of Supply and Grace are attached to every remaining claim (Section 05). A product with no reviewed value gets NULL, not a default.</p>'},
   {st:'STAGE 4', nm:'Episode (SOB)', ct:'Consecutive same-product claims merge',
-    body:'<p>Claims for the same product, same patient, join into one episode if the next claim falls inside the previous claim\'s DOS+Grace window. A 360-day lookback bounds how far back the engine checks (Section 06).</p>'},
+    body:'<p>Claims for the same product, same patient, join into one episode if the next claim falls inside the previous claim\'s DOS+Grace window. A 360-day lookback bounds how far back the engine checks (Section 07).</p>'},
   {st:'STAGE 5', nm:'Regimen', ct:'Overlapping episodes combine',
-    body:'<p>Episodes active on overlapping dates combine into a single regimen naming every active product. Smaller regimens are no longer absorbed into larger neighbors — each consolidated segment stands on its own (Section 06).</p>'},
+    body:'<p>Episodes active on overlapping dates combine into a single regimen naming every active product.</p>'},
   {st:'STAGE 6', nm:'Line of therapy', ct:'Gap test, then backbone test',
-    body:'<p>A &gt;90-day gap always starts a new line. Inside 90 days, a backbone change starts a new line too — unless it\'s specifically a Venclexta ↔ HMA switch (Section 07).</p>'},
+    body:'<p>A &gt;90-day gap always starts a new line. Inside 90 days, a backbone change starts a new line too — unless it\'s specifically a Venclexta ↔ HMA switch (Section 08).</p>'},
   {st:'STAGE 7', nm:'Eligibility flags', ct:'8 continuity flags attached, per analysis',
     body:'<p>Flags answering "was this patient observably active in every semester" are computed and attached — anchored either to AML treatment start or to Venclexta start specifically (Section 10). These gate KPIs; they never touch the patient pool itself.</p>'},
-  {st:'STAGE 8', nm:'KPI calculation', ct:'NPS and friends, read off the LOT table',
+  {st:'STAGE 8', nm:'KPI calculation', ct:'NPS and other KPIs, read off the LOT table',
     body:'<p>Reported metrics are a filter and a count against the finished line-of-therapy table — not a separate build.</p>'}
 ];
 var pipeEl = document.getElementById('pipe');
@@ -757,29 +752,13 @@ renderPipe(0);
    SECTION 03 — DX CHIPS
    ======================================================================== */
 var DX_CODES = [
-  ['C92.01','AML, without achievement of remission'],['C92.02','AML, in remission'],
-  ['C92.51','Acute myelomonocytic leukemia, without remission'],['C92.52','Acute myelomonocytic leukemia, in remission'],
-  ['C92.61','AML with 11q23-abnormality, without remission'],['C92.62','AML with 11q23-abnormality, in remission'],
-  ['C92.A1','AML with multilineage dysplasia, without remission'],['C92.A2','AML with multilineage dysplasia, in remission'],
-  ['C93.01','Acute monoblastic/monocytic leukemia, without remission'],['C93.02','Acute monoblastic/monocytic leukemia, in remission'],
-  ['C94.01','Acute erythroid leukemia, without remission'],['C94.21','Acute megakaryoblastic leukemia, without remission'],
-  ['C94.22','Acute megakaryoblastic leukemia, in remission']
+  '205','205.0','205.00','205.01','205.02',
+  'C92','C92.9','C92.0','C92.00','C92.01','C92.02','C92.5','C92.50','C92.51','C92.52',
+  'C92.6','C92.60','C92.61','C92.62','C92.90','C92.A','C92.A0','C92.A1','C92.A2','C92.Z0',
+  'C93','C93.0','C93.00','C93.01','C93.02','C94.0','C94.00','C94.01','C94.2','C94.20','C94.21','C94.22'
 ];
 document.getElementById('dxchips').innerHTML = DX_CODES.map(function(d){
-  return '<span class="chip b mono" title="'+d[1]+'">'+d[0]+'</span>';
-}).join('');
-
-var DX_CODES_ICD9 = [
-  ['205.00','Myeloid leukemia, acute, without remission — covers AML NOS, 11q23-abnormality, and multilineage-dysplasia (C92.01/.61/.A1); ICD-9 had no cytogenetic subtyping'],
-  ['205.01','Myeloid leukemia, acute, in remission — covers the "in remission" side of the same C92 codes'],
-  ['206.00','Monocytic leukemia, acute, without remission — covers acute myelomonocytic and monoblastic/monocytic (C92.51, C93.01)'],
-  ['206.01','Monocytic leukemia, acute, in remission — covers the "in remission" side of C92.52 / C93.02'],
-  ['207.00','Acute erythremia and erythroleukemia — covers C94.01'],
-  ['207.20','Megakaryocytic leukemia, without remission — covers C94.21'],
-  ['207.21','Megakaryocytic leukemia, in remission — covers C94.22']
-];
-document.getElementById('dxchips9').innerHTML = DX_CODES_ICD9.map(function(d){
-  return '<span class="chip mono" title="'+d[1]+'">'+d[0]+'</span>';
+  return '<span class="chip b mono">'+d+'</span>';
 }).join('');
 
 /* ========================================================================
@@ -804,7 +783,7 @@ function renderLadder(which){
     return '<div class="lv"><div class="r">'+(i+1)+'</div><div class="g">'+d[0]+'</div>'+
       '<div class="d">'+(i===0?'Outranks every other product below it when both are active at once.':'')+'</div>'+
       '<div class="c">'+d[1]+'</div></div>';
-  }).join('') + (which==='elig' ? '<p style="font-size:12.5px;color:var(--grey);margin-top:10px">Azacitidine/Decitabine and Onureg/Inqovi both resolve to the identical backbone string "HMA" from two different, non-adjacent rank positions in the underlying code. The output is identical either way — but a future refactor that tries to read a numeric rank from this list would see two different numbers for the same backbone name. Worth a second look, not an active bug.</p>' : '');
+  }).join('') + (which==='elig' ? '<p style="font-size:12.5px;color:var(--grey);margin-top:10px">Azacitidine/Decitabine and Onureg/Inqovi both resolve to the identical backbone string "HMA" from two different, non-adjacent rank positions in the underlying code. The output is identical either way — but a future refactor that tries to read a numeric rank from this list would see two different numbers for the same backbone name.</p>' : '');
 }
 renderLadder('inelig');
 Array.prototype.slice.call(document.querySelectorAll('[data-hier]')).forEach(function(btn){
@@ -822,12 +801,12 @@ var DOS_DATA = [
   ['ARSENIC_TRIOXIDE',60,28,'28-day cycle (PX)'],['AZACITIDINE',60,28,'28-day cycle (PX)'],
   ['CLADRIBINE',7,1,''],['CLOFARABINE',5,1,''],['CYCLOPHOSPHAMIDE',5,1,''],['DAUNORUBICIN',5,1,''],
   ['DAURISMO',60,null,'Oral — RX only'],['DECITABINE',60,28,'28-day cycle (PX)'],['ETOPOSIDE',5,1,''],
-  ['FLUDARABINE',5,1,''],['HI-DAC',7,1,'High-dose cytarabine — see Section 09'],['IDARUBICIN',5,1,''],
+  ['FLUDARABINE',5,1,''],['HI-DAC',7,1,'High-dose cytarabine — see Section 06'],['IDARUBICIN',5,1,''],
   ['IDHIFA',60,null,'Oral — RX only'],['INQOVI',28,null,'Oral — RX only · HMA backbone'],
-  ['L-DAC',60,1,'Low-dose cytarabine — see Section 09'],['MITOXANTRONE',3,1,''],['MYLOTARG',7,1,''],
+  ['L-DAC',60,1,'Low-dose cytarabine — see Section 06'],['MITOXANTRONE',3,1,''],['MYLOTARG',7,1,''],
   ['NEXAVAR',18,null,'Oral — RX only'],['ONUREG',28,null,'Oral — RX only · HMA backbone'],
   ['REZLIDHIA',60,null,'Oral — RX only'],['RYDAPT',60,null,'Oral — RX only'],
-  ['S-DAC',7,1,'Standard-dose cytarabine — see Section 09'],['TIBSOVO',60,null,'Oral — RX only'],
+  ['S-DAC',7,1,'Standard-dose cytarabine — see Section 06'],['TIBSOVO',60,null,'Oral — RX only'],
   ['VANFLYTA',28,null,'Oral — RX only'],['VENCLEXTA',60,null,'Oral — RX only'],['VINCRISTINE',28,1,''],
   ['VYXEOS',5,1,''],['XOSPATA',60,null,'Oral — RX only']
 ];
@@ -1005,7 +984,7 @@ renderWalk();
    SECTION 16 — GLOSSARY
    ======================================================================== */
 var GLOSSARY = [
-  ['AML 2+ pool','Patients with 2 or more AML-coded diagnosis claims, ever. The entire patient-pool gate — no recency, no hierarchy.'],
+  ['AML 2+ pool','Patients with 2 or more AML-coded diagnosis claims, ever.'],
   ['Backbone','The highest-ranked active product when more than one drug is active at once. Decides how the regimen is classified for line-of-therapy purposes.'],
   ['DOS (Days of Supply)','How many days a single claim is assumed to cover. From the claim itself for Rx; a fixed per-product value for PX.'],
   ['Episode','A run of claims for the same product, joined as long as each falls inside the previous claim\'s DOS+Grace window.'],

@@ -14,7 +14,7 @@ Concepts needing a paragraph. One-line terms are in `context/data/taxonomy.yaml`
 > patient is on at a given time as well as the count of regimens this patient has had successively."
 *(AML SHA Business Rules Guide V5.pptx · slide 11)*
 
-The order is not a convention—getting it wrong produces a wrong answer that looks right. Use the KBT for the notebook stage that produces the field you need (KBT 1-6).
+The order is not a convention—getting it wrong produces a wrong answer that looks right. Use the KBT for the notebook stage that produces the field you need (KBT 1-5). NPS dashboard figures use KBT 4 with the `nps_dashboard_legacy` metric.
 
 **Backbone product.** "A backbone product is the foundational drug of a regimen. It can be combined
 with other drugs within an episode, but when regimen is assigned to a patient it is classified based

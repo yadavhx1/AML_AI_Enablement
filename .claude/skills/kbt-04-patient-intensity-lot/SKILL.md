@@ -1,6 +1,6 @@
 ---
 name: kbt-04-patient-intensity-lot
-description: Use for AML base-layer questions about IC eligible versus IC ineligible patient intensity, the backbone hierarchy, backbone product, line of therapy (LoT) assignment, the 90-day gap rule, the Venclexta-HMA same-line exception, line distribution, products per line, the age-plus-product new intensity definition, or AML new patient starts by line (`AML_LOT_PATIENT_INTENSITY_LOT`).
+description: Use for AML base-layer questions about IC eligible versus IC ineligible patient intensity, the backbone hierarchy, backbone product, line of therapy (LoT) assignment, the 90-day gap rule, the Venclexta-HMA same-line exception, line distribution, products per line, the age-plus-product new intensity definition, AML new patient starts (NPS) by line, or the AML NPS dashboard - VEN / HMA / other NPS share by line and month, the line-level legacy backbone, NPS by initiating HCP, account, decile or segment, the Power BI dataset or the Ipsos index (`AML_LOT_PATIENT_INTENSITY_LOT`; dashboard method in the `nps_dashboard_legacy` metric).
 user-invocable: true
 ---
 
@@ -12,6 +12,11 @@ user-invocable: true
 Use this KBT when the output depends on patient intensity (IC_ELIG / IC_INELIG), the backbone, or the
 line of therapy: line distribution, regimen or product by line, 1L starts, time on line, or why a line
 changed. Use KBT 3 for regimen mix without lines and KBT 5 for eligibility gates.
+
+NPS questions also run here. Line-1 starts follow `context/metrics/nps_count.md` (step 7). NPS dashboard
+figures (share by line and month, legacy line backbone, HCP / account / segment, Ipsos index) follow the
+method, defaults and QC in `context/metrics/nps_dashboard_legacy.md`, which reads this KBT's LoT grouping
+table and the KBT 5 flags.
 
 Notebook: `scripts/Notebooks/AML_LOT_PATIENT_INTENSITY_LOT.ipynb`.
 
@@ -70,13 +75,16 @@ Notebook: `scripts/Notebooks/AML_LOT_PATIENT_INTENSITY_LOT.ipynb`.
 - `context/domain/key_concepts.md` (LoT rules)
 - `context/domain/rule_change_history.md`
 - `context/domain/line_of_therapy.md`, `patient_intensity.md`, `days_on_therapy.md`
-- `context/metrics/nps_count.md`
+- `context/metrics/nps_count.md`; `context/metrics/nps_dashboard_legacy.md` for dashboard figures
 - Profiles for the cohort, IC LoT, combined LoT, grouping and new-definition tables
 
 ## Verified-query candidates
 
 - `AML_PATIENT_INTENSITY_RULE_A`, `AML_LOT_IC_INELIG`, `AML_LOT_IC_ELIG`, `AML_COMBINED_LOT`,
   `AML_LOT_REGIMEN_GROUPING` (SQL equivalent of the pandas step), `AML_RULE_B_INPUTS`.
+- NPS dashboard (`verified_queries/nps_dashboard/`): `AML_NPS_LINE_BACKBONE`, `AML_NPS_REG_NPI_ACI`,
+  `AML_NPS_ACCOUNT_TYPE_GROUP`, `AML_NPS_HCP_INFO_MAP`, `AML_NPS_DASH_PBI_DATA`,
+  `AML_NPS_LOT_MONTH_SUMMARY`, `AML_NPS_IPSOS_INDEX`, `AML_NPS_ACCT_MONTH_ROLLUP`.
 
 ## Minimum QC
 
@@ -91,3 +99,4 @@ Notebook: `scripts/Notebooks/AML_LOT_PATIENT_INTENSITY_LOT.ipynb`.
 Return the requested result first. State the data source, grain, intensity definition (legacy rule or
 new definition), line definition, period, build suffix and material assumptions. Keep patient
 identifiers out of the response.
+End with the `How this answer was generated` provenance table and append it to `outputs/response_log.md` (`context/response_provenance.md`).

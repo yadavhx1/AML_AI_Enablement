@@ -1,6 +1,6 @@
 # Z_ABV_CWS_MABI_ONC_ANALYTICS.MABI_AML_NPS_DASHBOARD_LOT_MONTH_NPS_SUMMARY_UPDATED_BUSINESS_RULES_v2_SATEEK
 
-**Notebook:** `AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated` (`scripts/Notebooks/`); KBT 6.
+**Notebook:** `AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated` (`scripts/Notebooks/`); KBT 4, metric `nps_dashboard_legacy`.
 
 **Family:** APLD (AML NPS dashboard, legacy IC definition)
 **Contains:** AML NPS volume and VEN / HMA / other share by eligibility flags, legacy-rule cohort, line of therapy and month

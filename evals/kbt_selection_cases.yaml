@@ -34,10 +34,10 @@ cases:
 - prompt: How many patients are excluded as likely APL because of arsenic trioxide?
   expected_kbt: 5
 - prompt: What is the Venclexta share of IC ineligible 1L new patient starts on the NPS dashboard by semester?
-  expected_kbt: 6
+  expected_kbt: 4
 - prompt: How is the initiating HCP of an AML new patient start identified for the dashboard?
-  expected_kbt: 6
+  expected_kbt: 4
 - prompt: What share of AML 1L starts come from academic versus community accounts?
-  expected_kbt: 6
+  expected_kbt: 4
 - prompt: How does the SHA Venclexta NPS share compare with the reported Ipsos share?
-  expected_kbt: 6
+  expected_kbt: 4

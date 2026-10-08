@@ -1,5 +1,5 @@
 # Shared parameters for the five AML base-layer notebooks (scripts/Notebooks/all five notebooks).
-# The NPS dashboard notebook (KBT 6) also loads this file; its own values are in nps_dashboard_legacy.yaml.
+# The NPS dashboard notebook (metric nps_dashboard_legacy, KBT 4) also loads this file; its own values are in nps_dashboard_legacy.yaml.
 # Every value below is hardcoded, and repeated, in the GLOBAL VARIABLES / SPARK SESSION cells of each
 # notebook. Values are copied exactly as coded. See config/HARDCODED_INVENTORY.md for cell references.
 # Notebook-specific values live in config/<notebook>.yaml; a notebook YAML overrides a key of the same path here.

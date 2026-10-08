@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_LOT_MONTH_SUMMARY
 -- QUESTION: What are AML NPS volume and Venclexta / HMA / other share by line of therapy and month?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: NPS volume and share by DX_LB_ELIG_FLG, DX_TX_DIFF_FLG, PATIENT_COHORT, LOT, year and month. The published Summary sheet is DX_LB_ELIG_FLG = 1, DX_TX_DIFF_FLG = 1, PATIENT_COHORT = IC_INELIG, LOT = 1, rolled up to semesters.
 -- DATA_SOURCE: SHA (SHA_PTD)

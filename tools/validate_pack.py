@@ -8,7 +8,7 @@ import sys
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_KBTS = 6
+EXPECTED_KBTS = 5  # NPS is covered by metrics (nps_count, nps_dashboard_legacy), not a KBT
 errors: list[str] = []
 
 
@@ -26,12 +26,14 @@ def tsv(rel: str) -> list[dict[str, str]]:
 
 
 for rel in ["AML_Base_Business_Rule.html", "scripts/pldlib/pldlib.egg", "context/domain/pldlib.md", "CLAUDE.md", "README.md", "kbts/index.md", "context/data/table_index.tsv", "context/metrics/index.tsv",
-            "verified_queries/index.tsv", "evals/kbt_selection_cases.yaml", "context/assumptions/defaults.yaml"]:
+            "verified_queries/index.tsv", "evals/kbt_selection_cases.yaml", "context/assumptions/defaults.yaml",
+            "deck/VEN_TEMPLATE.pptx", "deck/slide_kit_ven.py", "deck/output_style_deck.py", "deck/README.md",
+            "context/response_provenance.md"]:
     if not (ROOT / rel).exists():
         fail(f"Missing core file: {rel}")
 
 claude_lines = (ROOT / "CLAUDE.md").read_text(encoding="utf-8").splitlines()
-if len(claude_lines) > 130:
+if len(claude_lines) > 145:
     fail(f"CLAUDE.md too long: {len(claude_lines)} lines")
 
 skills = sorted((ROOT / ".claude/skills").glob("*/SKILL.md"))
@@ -136,7 +138,7 @@ for p in ROOT.rglob("*"):
             except Exception as e:
                 fail(f"Invalid YAML {p.relative_to(ROOT)}: {e}")
         if p.suffix.lower() == ".md":
-            for ref in re.findall(r"`((?:context|verified_queries|scripts|config|workflows|kbts|evals|tools)/[^`*<>]+?)`", t):
+            for ref in re.findall(r"`((?:context|verified_queries|scripts|config|workflows|kbts|evals|tools|deck)/[^`*<>]+?)`", t):
                 if not (ROOT / ref).exists() and "*" not in ref:
                     fail(f"Broken path `{ref}` in {p.relative_to(ROOT)}")
 

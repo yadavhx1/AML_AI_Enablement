@@ -1,6 +1,6 @@
 # Z_ABV_CWS_MABI_ONC_ANALYTICS.MABI_AML_NPS_DASHBOARD_REG_HCP_INFO_MAPPING_UPDATED_BUSINESS_RULES_v2_SATEEK
 
-**Notebook:** `AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated` (`scripts/Notebooks/`); KBT 6.
+**Notebook:** `AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated` (`scripts/Notebooks/`); KBT 4, metric `nps_dashboard_legacy`.
 
 **Family:** APLD (AML NPS dashboard, legacy IC definition)
 **Contains:** AML lines with the initiating HCP, decile, above-brand and execution segment and account subtype

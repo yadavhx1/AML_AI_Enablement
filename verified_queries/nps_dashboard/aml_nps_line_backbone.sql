@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_LINE_BACKBONE
 -- QUESTION: How does the legacy NPS dashboard pick the backbone of each AML line?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: One row per patient x LOT from the LoT grouping table, with legacy-rule intensity and the legacy backbone: the highest-ranked product of the whole line on the IC_ELIG (28) or IC_INELIG (11) rank list. Named products (AZACITIDINE, not HMA).
 -- DATA_SOURCE: SHA (SHA_PTD)

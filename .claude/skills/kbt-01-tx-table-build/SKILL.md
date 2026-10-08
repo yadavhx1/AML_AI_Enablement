@@ -76,3 +76,4 @@ Notebook: `scripts/Notebooks/AML_LOT_TX_TABLE.ipynb`.
 Return the requested result first. State the data source, grain, pool rule, period and material
 assumptions. Mention a verified query only when it was reused or materially adapted. Keep patient
 identifiers out of the response.
+End with the `How this answer was generated` provenance table and append it to `outputs/response_log.md` (`context/response_provenance.md`).

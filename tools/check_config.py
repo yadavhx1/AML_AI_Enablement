@@ -144,7 +144,7 @@ check(dict(calls) == expected and len(calls) == 7, f"7 flag checks routed by sem
 check(not any("toPandas()" in s and "remaining_patients_to_be_checked" in s for s in n5),
       "continuity flags no longer use the pandas merge")
 
-# NPS dashboard notebook (KBT 6): table names, rank lists, summary settings.
+# NPS dashboard notebook (metric nps_dashboard_legacy): table names, rank lists, summary settings.
 c6 = load_config("nps_dashboard_legacy.yaml")
 n6 = src("AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb")
 

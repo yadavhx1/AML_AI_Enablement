@@ -97,3 +97,4 @@ Notebook: `scripts/Notebooks/AML_PATIENT_ELIGIBILITY.ipynb`.
 
 Return the requested result first. State the data source, gates applied, denominator, period, build
 suffix and material assumptions. Keep patient identifiers out of the response.
+End with the `How this answer was generated` provenance table and append it to `outputs/response_log.md` (`context/response_provenance.md`).

@@ -3,7 +3,8 @@
 **Cadence:** monthly, once the full base-layer refresh (`workflows/aml_base_layer_refresh.md`) has finished,
 AML_PATIENT_ELIGIBILITY included.
 **Notebook:** `scripts/Notebooks/AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb`.
-**KBT:** 6 (`/kbt-06-nps-dashboard-legacy`).
+**KBT:** none of its own. Run under KBT 4 (`/kbt-04-patient-intensity-lot`); method, defaults and QC are in
+`context/metrics/nps_dashboard_legacy.md`.
 
 ## Purpose
 

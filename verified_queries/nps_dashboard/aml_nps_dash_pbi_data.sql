@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_DASH_PBI_DATA
 -- QUESTION: What is in the legacy AML NPS Power BI dataset?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: Power BI input: one row per patient x LOT with backbone, BACKBONE_GROUP (VENCLEXTA / HMA / OTHER NOVEL AGENTS), line dates, NPI, Abbott id, decile, segments and account subtype with its rank.
 -- DATA_SOURCE: SHA (SHA_PTD)

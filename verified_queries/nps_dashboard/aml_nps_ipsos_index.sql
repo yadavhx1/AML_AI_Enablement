@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_IPSOS_INDEX
 -- QUESTION: How does the SHA Venclexta NPS share compare with the reported (Ipsos) share by month?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: Reported VEN and total NPS per month from the dashboard repository, next to the SHA VEN and total counts from the dashboard table by month of line start, from Jan 2019.
 -- DATA_SOURCE: SHA (SHA_PTD)

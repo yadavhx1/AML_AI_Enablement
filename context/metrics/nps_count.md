@@ -28,7 +28,7 @@ Not the CLL 36-month new-start rule; AML uses the line-1 start. A later line cha
 start. For combination regimens the start attributes to the backbone (open item OI-09) unless the
 question asks for the regimen. AML line groups are null before Jan 2019 (FDA approval floor); SHA data
 from 2019 onwards is used. The five-notebook build has no relapse/remission refinement (OI-08).
-The NPS dashboard (KBT 6, `nps_dashboard_legacy.md`) uses a line-level legacy backbone, counts every line
+The NPS dashboard (`nps_dashboard_legacy.md`, run under KBT 4) uses a line-level legacy backbone, counts every line
 and dates starts by line end month as shipped; use that metric for dashboard figures.
 
 ## Source lineage

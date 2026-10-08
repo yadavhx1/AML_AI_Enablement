@@ -9,8 +9,9 @@ notebook (the last base-layer step).
 ## Required workflow for every analytical question
 
 1. Identify the user's analytical objective and select one primary KBT from `.claude/skills/`.
-   Each KBT matches one notebook stage (TX table, SOB/episode, regimen, intensity/LoT, eligibility,
-   NPS dashboard).
+   Each KBT matches one base-layer notebook stage (TX table, SOB/episode, regimen, intensity/LoT,
+   eligibility). NPS dashboard questions have no KBT of their own: use KBT 4 and follow
+   `context/metrics/nps_dashboard_legacy.md`.
 2. Load that KBT before drafting SQL. Use its method as the step order.
 3. Read only the context required by those steps:
    - `context/data/table_index.tsv`, then the exact table profile and compact `analysis_columns.tsv`;
@@ -52,7 +53,8 @@ best working SQL and the exact technical limitation without inventing schema or 
 - Pool, TX claims, basket, DOS, grace → KBT 1. Episodes, Venclexta start/end → KBT 2.
   Regimen mix → KBT 3. Intensity, backbone, line of therapy, 1L starts → KBT 4.
   Eligibility gates, anchor dates, SCT/BMB cohorts, Dx-to-Tx timing → KBT 5.
-  NPS dashboard share (VEN / HMA / other), NPS by HCP, account or segment, Ipsos index → KBT 6.
+  NPS dashboard share (VEN / HMA / other), NPS by HCP, account or segment, Ipsos index → KBT 4 with the
+  `nps_dashboard_legacy` metric (method, defaults and QC are in the metric file).
 - A KBT may borrow a definition, table, or SQL pattern from another KBT without starting a second
   analytical workflow. A gated KPI by line uses KBT 4 and borrows the KBT 5 gates.
 - For a genuinely multi-part request, complete each part sequentially and state the KBT used for each.
@@ -69,7 +71,7 @@ best working SQL and the exact technical limitation without inventing schema or 
 
 ## Verified-query reuse
 
-- Verified SQL is rendered from the six notebooks and can be reused fully or partially.
+- Verified SQL is rendered from the six notebooks (five base-layer, one NPS dashboard) and can be reused.
 - Files marked `SQL EQUIVALENT` reconstruct a pandas step; validate them against the persisted table.
 - pldlib steps (sob, episode, regimen) carry the call parameters and the SQL pldlib generates
   (`context/domain/pldlib.md`, source in `scripts/pldlib/`); read their persisted tables.
@@ -106,10 +108,12 @@ best working SQL and the exact technical limitation without inventing schema or 
 - Write every generated file to `outputs/`, never elsewhere in the pack.
   - One folder per analysis: `outputs/<YYYY-MM-DD>_<short-topic>/`. It holds the working SQL that was
     run, the aggregated result tables and charts, and a `README.md` (question, KBT, source, build
-    suffix, period, gates, assumptions).
+    suffix, period, gates, assumptions, `## Provenance` table).
+  - `outputs/response_log.md`: append-only provenance log, one entry per answer.
   - Temporary files go in `outputs/_scratch/`; delete them when the analysis is done.
+- Build every `.pptx` on the VENCLEXTA template with the kit in `deck/` (rules in `deck/README.md`).
 - Files hold aggregates only: no patient identifiers, NPIs or patient-level extracts.
-- Do not write outputs into `verified_queries/`, `config/`, `context/` or `scripts/`.
+- Do not write outputs into `verified_queries/`, `config/`, `context/`, `scripts/` or `deck/`.
 
 ## Final response format
 
@@ -123,5 +127,13 @@ Lead with the requested result or insight. Then include, when relevant:
 Avoid dumping implementation details unless the user asks for code or methodology.
 
 Do not narrate the working process. No "Let me…" / "I'll check…" preambles, no commentary between
-tool calls, no account of files read, KBT selection reasoning, query drafts or retries. Work silently
-and return only the final answer in the format above. Show SQL or method steps only when asked.
+tool calls, no account of query drafts or retries. Work silently and return only the final answer in
+the format above plus the provenance table below. Show SQL or method steps only when asked.
+
+## Response provenance (every answer)
+
+End every answer about the repo, its data or its analyses with a `How this answer was generated` table,
+and append the same entry to `outputs/response_log.md`. Follow `context/response_provenance.md`.
+Rows: prior context reused, skill (KBT), files opened, verified queries, data, execution status,
+assumptions (basis + effect) and outputs written. List only what was actually used. This table is the
+only allowed account of the working process.

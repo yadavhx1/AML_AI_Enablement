@@ -17,5 +17,5 @@ Three kinds of reference:
 
 Temp views the notebooks create in one cell and read in another are inlined as CTEs. The four AML_LOT notebooks
 write `_BUSINESS_RULE_CHANGE_VAL_v2` tables; AML_PATIENT_ELIGIBILITY reads and writes the un-suffixed
-`_BUSINESS_RULE_CHANGE_VAL` tables (open item OI-02). Keep the suffix consistent in a working query. The NPS dashboard queries (`kbt-06/`) use the
+`_BUSINESS_RULE_CHANGE_VAL` tables (open item OI-02). Keep the suffix consistent in a working query. The NPS dashboard queries (`nps_dashboard/`, indexed under KBT 4, metric `nps_dashboard_legacy`) use the
 notebook's personal table names (OI-16).

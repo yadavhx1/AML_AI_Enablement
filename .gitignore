@@ -1,6 +1,7 @@
 # Analysis outputs (generated per analysis) - keep only the folder README and scratch placeholder
 outputs/*
 !outputs/README.md
+!outputs/response_log.md
 !outputs/_scratch/
 outputs/_scratch/*
 !outputs/_scratch/.gitkeep

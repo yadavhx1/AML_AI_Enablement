@@ -1,7 +1,7 @@
 # Data context
 
 Start with `table_index.tsv`. `family = aml_base_layer` tables are written by the five notebooks in `scripts/Notebooks/`
-(in pipeline order); `family = aml_nps_dashboard` tables are written by the NPS dashboard notebook (KBT 6);
+(in pipeline order); `family = aml_nps_dashboard` tables are written by the NPS dashboard notebook (KBT 4, metric `nps_dashboard_legacy`);
 `family = source` tables are the SHA views the pipeline reads. For the selected
 table, read `profile.md` and `analysis_columns.tsv`; search `columns.tsv` only when a field is not in
 the compact set.

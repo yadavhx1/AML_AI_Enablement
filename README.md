@@ -1,8 +1,8 @@
 # AML base-layer KBT-first analytics context pack
 
 This pack is for Claude Code in VS Code. It follows the layout of the Venclexta KBT-first pack and
-covers the AML base layer and the AML NPS dashboard: six KBTs, one per notebook, with targeted context
-and reusable SQL.
+covers the AML base layer and the AML NPS dashboard: five KBTs, one per base-layer notebook, with targeted
+context and reusable SQL. NPS (including the dashboard) is covered by metrics, not by a separate KBT.
 
 ## Runtime flow
 
@@ -14,6 +14,8 @@ and reusable SQL.
 6. Write and run the working SQL.
 7. Resolve ambiguity with a documented assumption instead of interrupting the analysis.
 8. Validate the result and return the answer with material assumptions.
+9. End with a provenance table (context reused, skill, files, queries, assumptions) and append it to
+   `outputs/response_log.md` (`context/response_provenance.md`).
 
 ## How to use
 
@@ -33,7 +35,11 @@ Claude loads the relevant KBT skill automatically. For testing, invoke one expli
 | 3 | `kbt-03-regimen` | `AML_LOT_REGIMEN.ipynb` |
 | 4 | `kbt-04-patient-intensity-lot` | `AML_LOT_PATIENT_INTENSITY_LOT.ipynb` |
 | 5 | `kbt-05-patient-eligibility` | `AML_PATIENT_ELIGIBILITY.ipynb` |
-| 6 | `kbt-06-nps-dashboard-legacy` | `AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb` (runs after KBT 5, the last base-layer step) |
+
+NPS metrics: `nps_count` (line-1 starts) and `nps_dashboard_legacy` (dashboard share by line, HCP, account,
+segment, Ipsos index) in `context/metrics/`. The dashboard metric holds the full method for
+`AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb` (runs after KBT 5). NPS questions use
+KBT 4 for lines and intensity and borrow the KBT 5 gates.
 
 ## Important folders
 
@@ -44,17 +50,23 @@ Claude loads the relevant KBT skill automatically. For testing, invoke one expli
 - `context/data/source_dictionaries/`: SHA PTD and Komodo raw-feed data dictionaries, plus view-to-raw
   column lineage.
 - `context/metrics/`: the reported KPIs only (NPS: `nps_count`, `nps_dashboard_legacy`; `sct_rate`;
-  `bmb_rate`), indexed in `index.tsv`. Building-block definitions (eligibility flags, line of therapy,
+  `bmb_rate`), indexed in `index.tsv`. `nps_dashboard_legacy.md` carries the full NPS dashboard method. Building-block definitions (eligibility flags, line of therapy,
   intensity, patient pool, days on therapy, time to treatment) are in `context/domain/`.
 - `context/domain/`: brand, data landscape, key concepts, AML code sets, and rule history.
 - `context/assumptions/`: defaults, policy, open items, and the SME answers reused from the Venclexta pack.
-- `verified_queries/`: one SQL reference per pipeline step, plus a searchable index.
+- `verified_queries/`: one SQL reference per pipeline step (`kbt-01/` … `kbt-05/`, plus `nps_dashboard/`
+  indexed under KBT 4), plus a searchable index.
 - `workflows/`: the base-layer refresh procedure (the five notebooks in run order) and the separate
   NPS dashboard refresh (`aml_nps_dashboard_legacy.md`).
 - `evals/`: example questions and expected KBT selection.
 - `tools/validate_pack.py`: structural validation for the pack.
+- `deck/`: the VENCLEXTA PowerPoint template (`VEN_TEMPLATE.pptx`), the VEN slide kit
+  (`slide_kit_ven.py`), the pack's deck conventions (`output_style_deck.py`) and a worked example. Every
+  generated `.pptx` uses it; see `deck/README.md`.
 - `outputs/`: every file generated during an analysis (one dated folder per analysis; temporary files
-  in `outputs/_scratch/`). Aggregates only; skipped by the validator.
+  in `outputs/_scratch/`), plus `response_log.md`, the provenance log for every answer. Aggregates
+  only; skipped by the validator.
+- `context/response_provenance.md`: the provenance table each answer must carry.
 - `AML_Base_Business_Rule.html`: the AML base-layer business-rules page (current revision, 2026-10-07).
 - `scripts/`: the five base-layer notebooks and the NPS dashboard notebook (`Notebooks/`), the
   `pldlib.egg` library the base-layer notebooks load plus its
@@ -62,7 +74,7 @@ Claude loads the relevant KBT skill automatically. For testing, invoke one expli
 
 ## Design principles
 
-- One primary KBT per question, matching one notebook stage.
+- One primary KBT per question, matching one base-layer notebook stage; NPS via the NPS metrics.
 - The base-layer tables are read, not rebuilt, unless the user asks for a rule simulation.
 - Notebook code wins where it disagrees with the business-rules page.
 - Missing or conflicting inputs create assumptions, not dead ends.
@@ -71,6 +83,7 @@ Claude loads the relevant KBT skill automatically. For testing, invoke one expli
 ## Review and testing
 
 - `python tools/validate_pack.py`: structural validation of the pack.
+- `python deck/example_deck.py`: deck-kit smoke test (exit 1 on any layout warning).
 - `python tools/check_config.py`: confirms `config/` still matches the notebook code.
 - `evals/kbt_selection_cases.yaml`: example questions with the expected KBT.
 - `PACK_CHANGELOG.md`: what changed in the pack, and where its content came from.

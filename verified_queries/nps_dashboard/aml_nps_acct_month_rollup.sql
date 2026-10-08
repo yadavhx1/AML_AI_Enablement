@@ -1,8 +1,8 @@
 -- VERIFIED QUERY REFERENCE
 -- QUERY: AML_NPS_ACCT_MONTH_ROLLUP
 -- QUESTION: What are AML NPS counts by month and account subtype / group for the dashboard?
--- PRIMARY_KBT: 6
--- SECONDARY_KBTS: 4
+-- PRIMARY_KBT: 4
+-- SECONDARY_KBTS: 5
 -- DIALECT: Databricks / Spark SQL
 -- PURPOSE: Venclexta, HMA, other-novel and total SHA NPS by month of line start, account subtype and Academic / Community group, on the reported months of the index table.
 -- DATA_SOURCE: SHA (SHA_PTD)

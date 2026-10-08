@@ -67,3 +67,4 @@ Notebook: `scripts/Notebooks/AML_LOT_SOB_EPISODE.ipynb`.
 
 Return the requested result first. State the data source, grain, period, build suffix and material
 assumptions. Keep patient identifiers out of the response.
+End with the `How this answer was generated` provenance table and append it to `outputs/response_log.md` (`context/response_provenance.md`).
