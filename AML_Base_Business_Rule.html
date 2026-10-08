@@ -336,7 +336,6 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
     <div><span>28</span><small>Products tracked across both backbone hierarchies</small></div>
     <div><span>2</span><small>Patient-intensity populations, each with its own hierarchy</small></div>
     <div><span>90d</span><small>Gap that ends a line of therapy</small></div>
-    <div><span>8+</span><small>Eligibility flags gating KPI inclusion</small></div>
     <div><span>1</span><small>Named exception: Venclexta ↔ HMA switches don't end a line</small></div>
   </div>
 
@@ -383,12 +382,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
   gate, not a funnel.</p>
 
   <h3>AML diagnosis codes</h3>
-  <p>ICD-10 chapter C92–C94 covers the acute myeloid and related leukemia subtypes used to define this
-  population. ICD-9 never captured the same cytogenetic/subtype granularity, so several ICD-10 codes below
-  collapse onto the same legacy ICD-9 code:</p>
+  <p>The complete set of ICD-10 diagnosis codes (chapter C92–C94) used to identify this population:</p>
   <div id="dxchips" style="margin-top:2px"></div>
-  <p style="font-size:12.5px;color:var(--grey);margin-top:12px">ICD-9 (legacy)</p>
-  <div id="dxchips9" style="margin-top:2px"></div>
 
   <h3>What "2+" actually requires</h3>
   <div class="tree">
@@ -627,7 +622,7 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
 <!-- ============ 11. ELIGIBILITY FLAGS ============ -->
 <section id="s10">
   <h2><span class="no">10</span> Eligibility flags</h2>
-  <p class="deck">Five flags decide which patients a given KPI is even allowed to count. None of them touch
+  <p class="deck">Six flags decide which patients a given KPI is even allowed to count. None of them touch
   the patient pool itself — they're a second gate, applied per-analysis, on top of population membership.</p>
 
   <p>Every flag asks a version of the same question: <b>has this patient been observably active — a
@@ -641,7 +636,8 @@ footer .fl{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;al
       before first diagnosis.<br><br>
       <code class="flag">TX_TXL_MX_ELIG_FLG</code> — continuously active on medical claims across the
       patient's full AML treatment span, semester by semester.<br><br>
-      <code class="flag">TX_TXL_RX_ELIG_FLG</code> — the same continuity check, on pharmacy claims.
+      <code class="flag">TX_TXL_RX_ELIG_FLG</code> — the same continuity check, on pharmacy claims.<br><br>
+      <code class="flag">DX_TX_DIFF_FLG</code> — gap between AML's first diagnosis and first treatment is 60 days or less.
     </div>
     <div>
       <div class="cardhd">Anchored to Venclexta start specifically</div>
@@ -730,7 +726,7 @@ var PIPELINE = [
   {st:'STAGE 4', nm:'Episode (SOB)', ct:'Consecutive same-product claims merge',
     body:'<p>Claims for the same product, same patient, join into one episode if the next claim falls inside the previous claim\'s DOS+Grace window. A 360-day lookback bounds how far back the engine checks (Section 06).</p>'},
   {st:'STAGE 5', nm:'Regimen', ct:'Overlapping episodes combine',
-    body:'<p>Episodes active on overlapping dates combine into a single regimen naming every active product. Smaller regimens are no longer absorbed into larger neighbors — each consolidated segment stands on its own (Section 06).</p>'},
+    body:'<p>Episodes active on overlapping dates combine into a single regimen naming every active product.</p>'},
   {st:'STAGE 6', nm:'Line of therapy', ct:'Gap test, then backbone test',
     body:'<p>A &gt;90-day gap always starts a new line. Inside 90 days, a backbone change starts a new line too — unless it\'s specifically a Venclexta ↔ HMA switch (Section 07).</p>'},
   {st:'STAGE 7', nm:'Eligibility flags', ct:'8 continuity flags attached, per analysis',
@@ -757,29 +753,12 @@ renderPipe(0);
    SECTION 03 — DX CHIPS
    ======================================================================== */
 var DX_CODES = [
-  ['C92.01','AML, without achievement of remission'],['C92.02','AML, in remission'],
-  ['C92.51','Acute myelomonocytic leukemia, without remission'],['C92.52','Acute myelomonocytic leukemia, in remission'],
-  ['C92.61','AML with 11q23-abnormality, without remission'],['C92.62','AML with 11q23-abnormality, in remission'],
-  ['C92.A1','AML with multilineage dysplasia, without remission'],['C92.A2','AML with multilineage dysplasia, in remission'],
-  ['C93.01','Acute monoblastic/monocytic leukemia, without remission'],['C93.02','Acute monoblastic/monocytic leukemia, in remission'],
-  ['C94.01','Acute erythroid leukemia, without remission'],['C94.21','Acute megakaryoblastic leukemia, without remission'],
-  ['C94.22','Acute megakaryoblastic leukemia, in remission']
+  'C92','C92.9','C92.0','C92.00','C92.01','C92.02','C92.5','C92.50','C92.51','C92.52',
+  'C92.6','C92.60','C92.61','C92.62','C92.90','C92.A','C92.A0','C92.A1','C92.A2','C92.Z0',
+  'C93','C93.0','C93.00','C93.01','C93.02','C94.0','C94.00','C94.01','C94.2','C94.20','C94.21','C94.22'
 ];
 document.getElementById('dxchips').innerHTML = DX_CODES.map(function(d){
-  return '<span class="chip b mono" title="'+d[1]+'">'+d[0]+'</span>';
-}).join('');
-
-var DX_CODES_ICD9 = [
-  ['205.00','Myeloid leukemia, acute, without remission — covers AML NOS, 11q23-abnormality, and multilineage-dysplasia (C92.01/.61/.A1); ICD-9 had no cytogenetic subtyping'],
-  ['205.01','Myeloid leukemia, acute, in remission — covers the "in remission" side of the same C92 codes'],
-  ['206.00','Monocytic leukemia, acute, without remission — covers acute myelomonocytic and monoblastic/monocytic (C92.51, C93.01)'],
-  ['206.01','Monocytic leukemia, acute, in remission — covers the "in remission" side of C92.52 / C93.02'],
-  ['207.00','Acute erythremia and erythroleukemia — covers C94.01'],
-  ['207.20','Megakaryocytic leukemia, without remission — covers C94.21'],
-  ['207.21','Megakaryocytic leukemia, in remission — covers C94.22']
-];
-document.getElementById('dxchips9').innerHTML = DX_CODES_ICD9.map(function(d){
-  return '<span class="chip mono" title="'+d[1]+'">'+d[0]+'</span>';
+  return '<span class="chip b mono">'+d+'</span>';
 }).join('');
 
 /* ========================================================================
@@ -804,7 +783,7 @@ function renderLadder(which){
     return '<div class="lv"><div class="r">'+(i+1)+'</div><div class="g">'+d[0]+'</div>'+
       '<div class="d">'+(i===0?'Outranks every other product below it when both are active at once.':'')+'</div>'+
       '<div class="c">'+d[1]+'</div></div>';
-  }).join('') + (which==='elig' ? '<p style="font-size:12.5px;color:var(--grey);margin-top:10px">Azacitidine/Decitabine and Onureg/Inqovi both resolve to the identical backbone string "HMA" from two different, non-adjacent rank positions in the underlying code. The output is identical either way — but a future refactor that tries to read a numeric rank from this list would see two different numbers for the same backbone name. Worth a second look, not an active bug.</p>' : '');
+  }).join('') + (which==='elig' ? '<p style="font-size:12.5px;color:var(--grey);margin-top:10px">Azacitidine/Decitabine and Onureg/Inqovi both resolve to the identical backbone string "HMA" from two different, non-adjacent rank positions in the underlying code. The output is identical either way — but a future refactor that tries to read a numeric rank from this list would see two different numbers for the same backbone name.</p>' : '');
 }
 renderLadder('inelig');
 Array.prototype.slice.call(document.querySelectorAll('[data-hier]')).forEach(function(btn){
@@ -1005,7 +984,7 @@ renderWalk();
    SECTION 16 — GLOSSARY
    ======================================================================== */
 var GLOSSARY = [
-  ['AML 2+ pool','Patients with 2 or more AML-coded diagnosis claims, ever. The entire patient-pool gate — no recency, no hierarchy.'],
+  ['AML 2+ pool','Patients with 2 or more AML-coded diagnosis claims, ever.'],
   ['Backbone','The highest-ranked active product when more than one drug is active at once. Decides how the regimen is classified for line-of-therapy purposes.'],
   ['DOS (Days of Supply)','How many days a single claim is assumed to cover. From the claim itself for Rx; a fixed per-product value for PX.'],
   ['Episode','A run of claims for the same product, joined as long as each falls inside the previous claim\'s DOS+Grace window.'],
