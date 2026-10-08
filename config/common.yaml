@@ -1,0 +1,108 @@
+# Shared parameters for the five AML base-layer notebooks (scripts/Notebooks/all five notebooks).
+# The NPS dashboard notebook (KBT 6) also loads this file; its own values are in nps_dashboard_legacy.yaml.
+# Every value below is hardcoded, and repeated, in the GLOBAL VARIABLES / SPARK SESSION cells of each
+# notebook. Values are copied exactly as coded. See config/HARDCODED_INVENTORY.md for cell references.
+# Notebook-specific values live in config/<notebook>.yaml; a notebook YAML overrides a key of the same path here.
+
+run:
+  # Build suffix appended to every derived table name.
+  # The four AML_LOT notebooks hardcode '_BUSINESS_RULE_CHANGE_VAL_v2'; AML_PATIENT_ELIGIBILITY hardcodes '_BUSINESS_RULE_CHANGE_VAL'
+  # (no _v2), so AML_PATIENT_ELIGIBILITY reads a different build than the four AML_LOT notebooks wrote (OI-02). Set once here; eligibility.yaml
+  # keeps its own override until that is resolved.
+  build_suffix: _BUSINESS_RULE_CHANGE_VAL_v2
+  app_name: AML_KA
+  # IC Eligible / IC Ineligible definition used to split patients and build lines of therapy.
+  #   legacy (default): product-only. IC_ELIG if any regimen in the journey has an IC-Eligible-only
+  #                     product; decided once for the whole journey. This is the production rule.
+  #   new:              age + product. Classified from the legacy line-1 product group:
+  #                     IC-Eligible product -> IC_ELIG; only HMA/IDH products -> IC_INELIG; else age at
+  #                     first Dx <= 65 -> IC_ELIG, > 65 -> IC_INELIG; no age -> IC_INELIG.
+  # Use 'legacy' unless the user explicitly asks for the new definition. A 'new' run writes its own
+  # tables (suffix + new_definition_tag below), so legacy tables and published numbers are never
+  # overwritten. config/intensity_definition.py resolves the table names and columns for each notebook.
+  intensity_definition: legacy
+  new_definition_tag: _NEWDEF
+
+spark:
+  # The four AML_LOT notebooks (cell 2). AML_PATIENT_ELIGIBILITY uses smaller values; see eligibility.yaml.
+  master: yarn
+  executor_instances: '20'
+  driver_memory: 5g
+  executor_memory: 20g
+  executor_cores: '5'
+  executor_memory_overhead: 4g
+
+pldlib:
+  # spark.sparkContext.addPyFile("pldlib.egg") - relative path; the egg ships in scripts/pldlib/.
+  egg_path: pldlib.egg
+  module: pldlib
+  import_name: stencil
+
+schemas:
+  cws: Z_ABV_CWS_MABI_ONC_ANALYTICS            # output schema for every derived table
+  claims_view: abv_val_ptd_onc_venc_synd.all_claims_combined_fact_vw
+  dx_view: abv_val_ptd_onc_synd.dx_fact_curated_vw
+  px_view: abv_val_ptd_onc_synd.px_fact_curated_vw
+  sx_view: abv_val_ptd_onc_synd.Sx_fact_curated_vw
+  product_dim: abv_val_ptd_onc_synd.dim_product_vw
+  reltio_tbl: abv_mhcd_synd.mhcd_rltn_all_org_customr_wkly_tbl   # declared, unused in all five notebooks
+  heme_account: '{cws}.heme_account'                             # "UPLOADED BY COE"; declared, unused in all five notebooks
+
+source_filters:
+  source_flag: SHA_PTD
+  source_market: ONC
+  market_code: VENC_AML          # applied in AML_PATIENT_ELIGIBILITY only; commented out in AML_LOT_TX_TABLE and AML_LOT_PATIENT_INTENSITY_LOT (new-definition birth year)
+
+# Derived table names. '{cws}' and '{suffix}' are filled from schemas.cws and run.build_suffix.
+# Names with no '{suffix}' are hardcoded without one in every notebook.
+tables:
+  tx_tbl_name: '{cws}.MABI_AML_REGIMEN_REVAMP_UPDATED_TX_TBL{suffix}'
+  tx_tbl_final_name: '{cws}.MABI_AML_REGIMEN_REVAMP_UPDATED_TX_TBL_FINAL{suffix}'
+  sob_tbl_name: '{cws}.MABI_AML_REGIMEN_REVAMP_SOB{suffix}'
+  episode_tbl_name: '{cws}.MABI_AML_REGIMEN_REVAMP_EPISODE{suffix}'
+  regimen_tbl_name: '{cws}.MABI_AML_REGIMEN_REVAMP_BASIC_REGIMEN{suffix}'
+  patient_group: '{cws}.MABI_AML_REGIMEN_REVAMP_PATIENT_COHORT{suffix}'
+  ic_inelig_final: '{cws}.MABI_AML_IC_INELIG_LOT_FINAL{suffix}'
+  ic_elig_final: '{cws}.MABI_AML_IC_ELIG_LOT_FINAL{suffix}'
+  pat_comb_lot: '{cws}.MABI_AML_PATS_COMB_LOT_TBL{suffix}'
+  pat_comb_lot_rr: '{cws}.MABI_AML_PATS_LOT_RR_12M_UPD{suffix}'          # declared; no notebook in all five notebooks writes it
+  pat_fst_dx_tx: '{cws}.MABI_AML_LOT_PAT_FST_DX_TX_TBL{suffix}'
+  dx_lookback_elig: '{cws}.MABI_AML_LOT_PAT_DX_LB_ELIG_TBL{suffix}'
+  tx_lookback_elig: '{cws}.MABI_AML_LOT_PAT_TX_MX_LB_ELIG_TBL{suffix}'    # declared; step commented out
+  tx_lookback_elig_rx: '{cws}.MABI_AML_LOT_PAT_TX_RX_LB_ELIG_TBL{suffix}' # declared; step commented out
+  tx_txl_mx_elig: '{cws}.MABI_AML_LOT_PAT_TX_MX_TXL_ELIG_TBL{suffix}'
+  tx_txl_rx_elig: '{cws}.MABI_AML_LOT_PAT_TX_RX_TXL_ELIG_TBL{suffix}'
+  tx_lookback_elig_ven: '{cws}.MABI_AML_LOT_PAT_VEN_TX_MX_LB_ELIG_TBL{suffix}'
+  tx_lookback_elig_rx_ven: '{cws}.MABI_AML_LOT_PAT_VEN_TX_RX_LB_ELIG_TBL{suffix}'
+  tx_txl_mx_elig_ven: '{cws}.MABI_AML_LOT_PAT_VEN_TX_MX_TXL_ELIG_TBL{suffix}'
+  tx_txl_rx_elig_ven: '{cws}.MABI_AML_LOT_PAT_VEN_TX_RX_TXL_ELIG_TBL{suffix}'
+  lot_regimen_group: '{cws}.MABI_AML_PATS_LOT_GROUPING_TBL{suffix}'      # not declared in AML_PATIENT_ELIGIBILITY
+  # Hardcoded as '_v2' (not the full suffix) in the four AML_LOT notebooks, and with no suffix in AML_PATIENT_ELIGIBILITY cell 156.
+  patient_intensity_based_on_age_n_product: '{cws}.PATIENT_INTENSITY_BASED_ON_AGE_N_PRODUCT_v2'
+  hcp_affiliations: '{cws}.MABI_AML_HCP_AFFILIATIONS'                    # declared; not built in all five notebooks
+  elig_flags_final: '{cws}.MABI_AML_LOT_PAT_ELIG_FLAGS_FINAL{suffix}'
+
+codes:
+  # AML diagnosis set (37), hardcoded inline in AML_LOT_TX_TABLE cell 8, AML_LOT_PATIENT_INTENSITY_LOT cells 33 and 42, AML_PATIENT_ELIGIBILITY cell 19.
+  aml_dx_full: ['205', '205.0', '205.00', '205.01', '205.02', 'C92', 'C92.9', 'C92.0', 'C92.00', 'C92.01',
+                'C92.02', 'C92.5', 'C92.50', 'C92.51', 'C92.52', 'C92.6', 'C92.60', 'C92.61', 'C92.62', 'C92.90',
+                'C92.A', 'C92.A0', 'C92.A1', 'C92.A2', 'C92.Z0', 'C93', 'C93.0', 'C93.00', 'C93.01', 'C93.02',
+                'C94.0', 'C94.00', 'C94.01', 'C94.2', 'C94.20', 'C94.21', 'C94.22']
+  # "RR AML DX ONLY" (13), global `aml_dx` in every notebook. Declared but unused in all five notebooks
+  # (consumed by the relapse/remission LoT refinement, which is outside these notebooks).
+  aml_dx_rr: ['C92.01', 'C92.02', 'C92.51', 'C92.52', 'C92.61', 'C92.62', 'C92.A1', 'C92.A2',
+              'C93.01', 'C93.02', 'C94.01', 'C94.21', 'C94.22']
+  # Legacy ICD-9 codes shown on the business-rules page (2026-10-07 revision, Section 03). NOT hardcoded in
+  # any notebook and not used by the pool or FIRST_DX (206.x / 207.x are absent from aml_dx_full). Kept so a
+  # sensitivity run can add them: aml_dx_full + aml_dx_icd9_page (OI-14).
+  aml_dx_icd9_page: ['205.00', '205.01', '206.00', '206.01', '207.00', '207.20', '207.21']
+
+products:
+  # AML basket (28), hardcoded in AML_LOT_TX_TABLE cell 13 (mastered_product_name IN (...)).
+  basket: [AZACITIDINE, DAURISMO, DECITABINE, IDHIFA, L-DAC, TIBSOVO, VENCLEXTA, XOSPATA, REZLIDHIA, MYLOTARG,
+           RYDAPT, ARSENIC_TRIOXIDE, CLADRIBINE, CLOFARABINE, CYCLOPHOSPHAMIDE, DAUNORUBICIN, ETOPOSIDE,
+           FLUDARABINE, HI-DAC, IDARUBICIN, MITOXANTRONE, NEXAVAR, ONUREG, INQOVI, S-DAC, VINCRISTINE, VANFLYTA,
+           VYXEOS]
+  excluded: [FILGRASTIM]         # AML_LOT_TX_TABLE cell 18: WHERE FINAL_PRODUCT_NAME <> 'FILGRASTIM'
+  venclexta: VENCLEXTA           # AML_PATIENT_ELIGIBILITY cell 19 VEN_START/VEN_END filter
+  arsenic: ARSENIC_TRIOXIDE      # AML_PATIENT_ELIGIBILITY cell 156 ARSENIC_FLG

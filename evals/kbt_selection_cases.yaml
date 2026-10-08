@@ -1,0 +1,43 @@
+cases:
+- prompt: How many patients enter the AML patient pool and what defines it?
+  expected_kbt: 1
+- prompt: What grace period and days of supply apply to azacitidine PX claims?
+  expected_kbt: 1
+- prompt: Why is Filgrastim missing from the AML treatment claims?
+  expected_kbt: 1
+- prompt: How are same-day duplicate Venclexta claims handled before episodes are built?
+  expected_kbt: 2
+- prompt: What is the median Venclexta episode length in AML?
+  expected_kbt: 2
+- prompt: What is each patient's Venclexta start date and how is it derived?
+  expected_kbt: 2
+- prompt: What are the most common AML regimens containing Venclexta?
+  expected_kbt: 3
+- prompt: How many distinct regimens does an AML patient have on average?
+  expected_kbt: 3
+- prompt: How are patients classified IC eligible versus IC ineligible?
+  expected_kbt: 4
+- prompt: What is the AML line-of-therapy distribution (1L vs 2L+) by backbone?
+  expected_kbt: 4
+- prompt: Does switching from Venclexta to azacitidine start a new line?
+  expected_kbt: 4
+- prompt: Compare legacy rule and new definition intensity classifications.
+  expected_kbt: 4
+- prompt: How many AML new patient starts were there by month and backbone?
+  expected_kbt: 4
+- prompt: Which eligibility flags gate the AML SCT rate and how many patients does each remove?
+  expected_kbt: 5
+- prompt: What is the AML SCT rate by semester of Venclexta start?
+  expected_kbt: 5
+- prompt: What is the distribution of days from first AML diagnosis to first treatment?
+  expected_kbt: 5
+- prompt: How many patients are excluded as likely APL because of arsenic trioxide?
+  expected_kbt: 5
+- prompt: What is the Venclexta share of IC ineligible 1L new patient starts on the NPS dashboard by semester?
+  expected_kbt: 6
+- prompt: How is the initiating HCP of an AML new patient start identified for the dashboard?
+  expected_kbt: 6
+- prompt: What share of AML 1L starts come from academic versus community accounts?
+  expected_kbt: 6
+- prompt: How does the SHA Venclexta NPS share compare with the reported Ipsos share?
+  expected_kbt: 6

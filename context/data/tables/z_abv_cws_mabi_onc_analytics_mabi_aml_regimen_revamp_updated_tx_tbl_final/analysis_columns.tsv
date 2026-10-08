@@ -1,0 +1,9 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key (patient_sk with SHA_PTDONC suffix).		Patient grain; never output.
+CLAIM_ID	varchar	Claim identifier from the claims view.		Uniqueness with product.
+CLAIM_DATE	date	Claim / service date.		Episode construction.
+FINAL_PRODUCT_NAME	varchar	Mastered AML basket product.	28 basket products (no FILGRASTIM)	Product cut.
+NATIVE_TYPE	varchar	Claim family.	RX, PX	Drives DOS rule.
+PRODUCT_DAYS_SUPPLY	int	Days supply as reported on the claim.		Raw; use DOS_FINAL.
+DOS_FINAL	int	Days of supply used by the base layer.		Episode window = claim date + DOS + grace.
+GRACE_VALUE	int	Per-product grace days.	3, 5, 7, 18, 28, 60	Episode window.

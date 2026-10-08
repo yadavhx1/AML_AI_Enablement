@@ -1,0 +1,11 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+LOT	int	Line of therapy.		Line grain; LOT = 1 for 1L NPS.
+BACKBONE	varchar	Legacy line backbone (named product).	product names, UNKNOWN	
+BACKBONE_GROUP	varchar	Dashboard backbone group.	VENCLEXTA, HMA, OTHER NOVEL AGENTS	Share numerator.
+REGIMEN_START_DATE	date	Line start (NPS date).		Month of start for the index and rollup.
+REGIMEN_END_DATE	date	Line end.		
+NPI	varchar	Initiating NPI.	NPI, Not Available	
+ACCT_SUBTYPE	varchar	Account subtype.	Elite Oncology Center ... DOD, Not Available	
+GNE_SEGMENT	varchar	Execution segment.		
+UNI_DECILE	varchar	HCP decile.	decile, Not Available	

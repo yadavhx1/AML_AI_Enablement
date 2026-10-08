@@ -1,0 +1,10 @@
+column_name	data_type	description	allowed_values	usage_notes
+MONTH_REPO	date	Reported month.		Month grain.
+ACCT_SUB_TYPE_GRP	varchar	Account group.	Academic, Community	
+ACCT_SUB_TYPE	varchar	Account subtype.	Elite Oncology Center ... DOD, Not Available	
+VEN_NPS_SHA	bigint	Venclexta starts.		
+HMA_NPS_SHA	bigint	HMA starts.		
+NOV_NPS_SHA	bigint	Other novel agent starts.		
+TOTAL_NPS_SHA	bigint	All starts.		
+ACCT_SUB_TYPE_HIER	int	Subtype display order.	1-9	
+ACCT_SUB_TYPE_GRP_HIER	int	Group display order.	1, 2	

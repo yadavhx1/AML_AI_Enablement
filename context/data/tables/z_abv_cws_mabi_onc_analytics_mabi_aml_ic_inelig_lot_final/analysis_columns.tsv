@@ -1,0 +1,10 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		
+REGIMEN	varchar	Regimen products.		
+REGIMEN_START_DATE	date	Regimen start.		
+REGIMEN_END_DATE	date	Regimen end.		
+REG_NUM	int	Regimen sequence.		
+BACKBONE	varchar	Backbone.	VENCLEXTA, TIBSOVO, REZLIDHIA, IDHIFA, XOSPATA, DAURISMO, L-DAC, HMA	
+PREV_GAP	int	Days since previous regimen end.		
+LINE_CHANGE	int	New-line flag.	0, 1	
+LOT	int	Line of therapy.		

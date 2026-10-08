@@ -1,0 +1,5 @@
+column_name	data_type	description	allowed_values	usage_notes
+NPI_NUMBER	varchar	Prescriber NPI from AML treatment claims.		HCP key.
+ABBOTT_CUSTOMER_ID	varchar	Abbott customer ID.		HCP key.
+CHILD_ABBOTT_ACCOUNT_ID	varchar	Affiliated child (L3) account.		Account key.
+FINAL_ACCOUNT_TYPE_GROUP_2	varchar	Site-of-care group.	Academic, Academic Satellite, Larger Community, Smaller Community, Federal, Not Available	Site-of-care cut.

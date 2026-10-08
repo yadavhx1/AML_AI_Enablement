@@ -1,0 +1,23 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain; never output.
+FINAL_PRODUCT_NAME	varchar	Episode product.	28 basket products	Product cut.
+drug_class_epsd	varchar	Drug class (constant 'NA' in this build).	NA	
+ntb_rnk	int	NTB run rank.		
+ntb_flag	varchar	SOB of the NTB opening the run.		
+EPISODE_NUM_DRVD	int	Episode sequence per patient and product.		Episode grain.
+EPISODE_START_DATE_DRVD	date	Episode start.		Persistency / DoT start.
+EPISODE_END_DATE1_DRVD	timestamp	Last claim date + last DOS.		Default episode end; regimen cut point.
+EPISODE_END_DATE2_DRVD	timestamp	End1 + last claim grace.		Grace-inclusive end.
+EPISODE_END_DATE3_DRVD	date	Last claim date (NULL for single-claim episodes).		
+episode_length	int	Episode length in days (sum of per-claim episode days).		Duration.
+episode_length_overlap	int	Episode length counting overlapping DOS.		
+episode_first_sob	varchar	Source of business of the episode's first claim.	NTB NAIVE, NTB SWITCH, NTB ADDON, RS SWITCH, RS ADDON, RS SAME	Source of business at episode start.
+dos_wo_last_claim	int	Sum of DOS excluding the last claim.		
+dos_wo_last_claim_no_overlap	int	As above, trimming overlaps.		
+dos_last_claim	int	DOS of the last claim.		
+DOS_NULL_FLAG	int	Claim DOS NULL flag.	0, 1	
+DOS_PAT_PRD_NULL_FLAG	int	Patient x product DOS NULL flag.	0, 1	
+DOS_PAT_PRD_EPSD_NULL_FLAG	int	Episode DOS NULL flag.	0, 1	
+first_claim_id_drvd	varchar	First claim id of the episode.		
+last_claims_grace_drvd	int	Grace of the last claim.		
+last_claims_lookback_drvd	int	Lookback of the last claim.	360	

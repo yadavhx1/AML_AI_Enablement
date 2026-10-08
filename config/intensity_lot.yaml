@@ -1,0 +1,103 @@
+# AML_LOT_PATIENT_INTENSITY_LOT - legacy-rule intensity, IC_ELIG / IC_INELIG LoT, combined LoT,
+# LoT grouping, new definition (age + product) intensity. Values copied exactly as coded.
+# Lists below are ORDERED where order matters (backbone CASE = first match wins).
+
+intensity_rule_a:                # cell 10, LOW_INTENSITY CASE on the regimen string (LIKE '%X%')
+  # Any regimen containing one of these -> LOW_INTENSITY = 0 -> IC_ELIG for the whole journey (MIN over regimens).
+  ic_elig_only_products: [ARSENIC_TRIOXIDE, CLADRIBINE, CLOFARABINE, CYCLOPHOSPHAMIDE, S-DAC, HI-DAC, DAUNORUBICIN,
+                          ETOPOSIDE, FILGRASTIM, FLUDARABINE, IDARUBICIN, MITOXANTRONE, MYLOTARG, NEXAVAR, RYDAPT,
+                          VANFLYTA, VINCRISTINE, VYXEOS]
+  # FILGRASTIM is a dead branch (dropped in AML_LOT_TX_TABLE). RYDAPT and MYLOTARG appear twice in the CASE; listed once.
+  # Moved to the IC-Ineligible side by the 2026 change (lines commented out): INQOVI, ONUREG.
+  low_intensity_value: 1         # ELSE 1
+  ic_inelig_label: IC_INELIG
+  ic_elig_label: IC_ELIG
+  rydapt_mylotarg_exception: false   # RYD_MYL_FLG block commented out
+
+lot:                             # cells 21 and 27 (same rules in both intensity groups)
+  gap_new_line_days: 90          # PREV_GAP > 90 -> new line
+  first_regimen_new_line: true   # REG_NUM = 1 -> LINE_CHANGE = 1
+  backbone_switch_exceptions:    # backbone change within the gap that does NOT start a new line (either direction)
+    - [VENCLEXTA, HMA]
+  match_operator: LIKE           # exceptions use BACKBONE LIKE '%VENCLEXTA%' / '%HMA%'
+
+ic_inelig:
+  cons_filter:                   # cell 16; the minimum-length filter is commented out
+    apply_min_length: false
+    min_regimen_length_days: 28  # value from the commented-out code
+    rydapt_min_regimen_length_days: 14
+  backbone_operator: RLIKE       # cell 21
+  backbone_hierarchy:            # ordered: [product pattern(s), BACKBONE value]
+    - [[VENCLEXTA], VENCLEXTA]
+    - [[TIBSOVO], TIBSOVO]
+    - [[REZLIDHIA], REZLIDHIA]
+    - [[IDHIFA], IDHIFA]
+    - [[XOSPATA], XOSPATA]
+    - [[DAURISMO], DAURISMO]
+    - [[L-DAC], L-DAC]
+    - [[AZACITIDINE], HMA]
+    - [[DECITABINE], HMA]
+    - [[INQOVI], HMA]
+    - [[ONUREG], HMA]
+  removed_from_hierarchy: [RYDAPT, MYLOTARG]     # commented out in cell 21
+  unmatched_backbone: null       # CASE has no ELSE
+
+ic_elig:
+  backbone_operator: LIKE        # cell 27
+  backbone_hierarchy:
+    - [[HI-DAC, S-DAC], S-DAC/HI-DAC]
+    - [[VANFLYTA], VANFLYTA]
+    - [[VYXEOS], VYXEOS]
+    - [[CYCLOPHOSPHAMIDE], CYCLOPHOSPHAMIDE]
+    - [[VINCRISTINE], VINCRISTINE]
+    - [[FLUDARABINE], FLUDARABINE]
+    - [[IDARUBICIN], IDARUBICIN]
+    - [[DAUNORUBICIN], DAUNORUBICIN]
+    - [[MITOXANTRONE], MITOXANTRONE]
+    - [[RYDAPT], RYDAPT]
+    - [[VENCLEXTA], VENCLEXTA]
+    - [[XOSPATA], XOSPATA]
+    - [[TIBSOVO], TIBSOVO]
+    - [[REZLIDHIA], REZLIDHIA]
+    - [[IDHIFA], IDHIFA]
+    - [[MYLOTARG], MYLOTARG]
+    - [[DAURISMO], DAURISMO]
+    - [[ONUREG], HMA]
+    - [[INQOVI], HMA]
+    - [[NEXAVAR], NEXAVAR]
+    - [[ETOPOSIDE], ETOPOSIDE]
+    - [[CLADRIBINE], CLADRIBINE]
+    - [[CLOFARABINE], CLOFARABINE]
+    - [[AZACITIDINE, DECITABINE], HMA]
+    - [[L-DAC], L-DAC]
+    - [[ARSENIC_TRIOXIDE], ARSENIC_TRIOXIDE]
+  unmatched_backbone: null       # ELSE NULL
+
+combined_lot:                    # cell 31
+  type_labels: {ic_elig: IC_ELIG, ic_inelig: IC_INELIG}
+
+lot_grouping:                    # cell 38 (pandas)
+  regimen_delimiter: ','
+  sort_products: true            # alphabetical, de-duplicated union per patient x LOT
+
+intensity_rule_b:                # cells 46-49
+  evaluated_lot: 1               # WHERE LOT = 1 (line-1 regimen group only)
+  birth_year_column: SOURCE_PATIENT_HIPAA_BIRTH_YEAR
+  birth_year_apply_market_code_filter: false   # `--AND market_code = 'VENC_AML'` commented out
+  birth_year_restrict_to_patient_pool: true    # uses the 2+ Dx pool (tx_table.yaml patient_pool), re-created in cell 33
+  age_formula: YEAR(FIRST_DX) - birth_year
+  age_threshold: 65              # age <= 65 -> IC_ELIG, > 65 -> IC_INELIG
+  default_when_no_age: IC_INELIG
+  ic_elig_products: [MYLOTARG, RYDAPT, ARSENIC_TRIOXIDE, CLADRIBINE, CLOFARABINE, CYCLOPHOSPHAMIDE, DAUNORUBICIN,
+                     ETOPOSIDE, FILGRASTIM, FLUDARABINE, HI-DAC, IDARUBICIN, MITOXANTRONE, NEXAVAR, S-DAC, VINCRISTINE,
+                     VANFLYTA, VYXEOS]
+  forced_inelig_products: [AZACITIDINE, DECITABINE, ONUREG, INQOVI, TIBSOVO, IDHIFA]   # all line-1 products in set
+  # Python rank lists (cell 47): lower rank wins. Named products, not 'HMA'; S-DAC and HI-DAC ranked separately.
+  ic_elig_rank: [S-DAC, HI-DAC, VANFLYTA, VYXEOS, CYCLOPHOSPHAMIDE, VINCRISTINE, FLUDARABINE, IDARUBICIN,
+                 DAUNORUBICIN, MITOXANTRONE, RYDAPT, VENCLEXTA, XOSPATA, TIBSOVO, REZLIDHIA, IDHIFA, MYLOTARG,
+                 DAURISMO, ONUREG, INQOVI, NEXAVAR, ETOPOSIDE, CLADRIBINE, CLOFARABINE, AZACITIDINE, DECITABINE,
+                 L-DAC, ARSENIC_TRIOXIDE]
+  ic_inelig_rank: [VENCLEXTA, TIBSOVO, REZLIDHIA, IDHIFA, XOSPATA, DAURISMO, L-DAC, AZACITIDINE, DECITABINE,
+                   INQOVI, ONUREG]
+  unmatched_backbone: UNKNOWN
+  output_table: tables.patient_intensity_based_on_age_n_product

@@ -1,0 +1,10 @@
+column_name	data_type	description	allowed_values	usage_notes
+DX_LB_ELIG_FLG	int	Diagnosis lookback flag.	1, 0, -1 (no flags row)	Gate.
+DX_TX_DIFF_FLG	int	Dx-to-Tx within 60 days flag.	1, 0, -1	Gate.
+PATIENT_COHORT	varchar	legacy-rule intensity from the flags table.	IC_ELIG, IC_INELIG, Not Available	
+LOT	int	Line of therapy.		
+TIME_YEAR_MONTH	varchar	YYYY-MM.		
+VEN_NPS	bigint	Starts with BACKBONE_GROUP = VENCLEXTA.		
+HMA_NPS	bigint	Starts with BACKBONE_GROUP = HMA.		
+OTHERS_NPS	bigint	Starts with OTHER NOVEL AGENTS.		
+TOTAL_NPS	bigint	All starts in the slice and month.		Share denominator.

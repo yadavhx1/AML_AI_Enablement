@@ -1,0 +1,40 @@
+# AML_LOT_SOB_EPISODE - pldlib stencil.sob and stencil.episode calls.
+# Every keyword argument is hardcoded in the call. Values copied exactly as coded.
+
+sob:                             # cell 9: stencil.init(spark).sob(...)
+  src_input_table: tables.tx_tbl_final_name
+  # Literal injected as a constant column: '(SELECT *, "202210" AS DATA_PERIOD FROM {tx_tbl_final_name})'.
+  # Hardcoded to Oct-2022 and never updated; pldlib reads it only because data_end_required = 'no'.
+  data_period: '202210'
+  grace: GRACE_VALUE
+  lookback: '360'
+  dedup_type_vl: yesremove       # handle multiple claims for a product on the same day
+  dedup_partition_on_clmns: PATIENT_GID, FINAL_PRODUCT_NAME, CLAIM_DATE
+  dedup_ranking_order_clmns: DOS_FINAL DESC, CLAIM_ID   # keep the claim with max DOS
+  dos_clmn: DOS_FINAL
+  patient_gid_clmn: PATIENT_GID
+  claim_id_clmn: CLAIM_ID
+  claim_start_dt_clmn: CLAIM_DATE
+  product_name_clmn: FINAL_PRODUCT_NAME
+  metric_ordering_by_clmns: CLAIM_DATE, CLAIM_ID
+  metric_ordering_by_following_clmns: CLAIM_DATE, CLAIM_ID
+  dos_metric_partition_on_clmns: PATIENT_GID, FINAL_PRODUCT_NAME, CLAIM_DATE
+  data_end_required: 'no'
+  required_grace: '0'
+  temp_view: sob_df
+  output_table: tables.sob_tbl_name
+
+episode:                         # cell 15: stencil.init(spark).episode(...)
+  src_input_tbl: sob_df          # temp view from the sob step (same session required)
+  patient_gid_clmn: PATIENT_GID
+  product_name_clmn: FINAL_PRODUCT_NAME
+  metric_ordering_by_clmns: CLAIM_DATE, CLAIM_ID
+  claim_rnkn_partition_on_clmns: PATIENT_GID, FINAL_PRODUCT_NAME, EPISODE_NUM_DRVD
+  claim_rnkn_ordering_by_clmns: CLAIM_DATE, CLAIM_ID
+  claim_id_clmn: CLAIM_ID
+  episode_end_dts_clmns: EPISODE_END_DATE1_DRVD, EPISODE_END_DATE2_DRVD, EPISODE_END_DATE3_DRVD
+  claim_start_dt_clmn: CLAIM_DATE
+  drug_class_clmn: '"NA"'        # quoted SQL literal placeholder, not a column
+  dos_null_flag_clmns: DOS_NULL_FLAG, DOS_PAT_PRD_NULL_FLAG, DOS_PAT_PRD_EPSD_NULL_FLAG
+  temp_view: episode_df
+  output_table: tables.episode_tbl_name

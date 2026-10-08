@@ -1,0 +1,16 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+REGIMEN	varchar	Regimen products.		
+REGIMEN_START_DATE	date	Regimen start.		
+REGIMEN_END_DATE	date	Regimen end.		
+BACKBONE	varchar	Backbone.		
+PREV_BACKBONE	varchar	Previous backbone.		
+REG_NUM	int	Regimen sequence.		
+LINE_CHANGE	int	Line-change flag.	0, 1	
+LOT	int	Raw line of therapy.		
+TYPE	varchar	legacy-rule intensity.	IC_ELIG, IC_INELIG	Intensity cut.
+REG_LKBK	date	Regimen start minus 12 months.		
+MAX_RR_DIAG_DT	date	Latest RR diagnosis in the 12-month lookback.		
+MIN_RR_DT	date	Earliest MAX_RR_DIAG_DT for the patient.		
+LOT_REF_INT	int	Refined line number.		
+LOT_REF	varchar	Refined line group.	1L, 2L+	Default AML line cut.

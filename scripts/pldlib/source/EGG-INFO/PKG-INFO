@@ -1,0 +1,21 @@
+Metadata-Version: 1.1
+Name: pldlib
+Version: 0.0.1
+Summary: This is a Patient level data analysis pyspark library
+Home-page: http://packages.python.org/pldlib
+Author: kuldeepsingh.chauhan@zs.com
+Author-email: kuldeepsingh.chauhan@zs.com
+License: BSD
+Description: """
+        PLDLIB -- Introduction:
+        
+        * PLDLIB stands for patient level data anaysis library.
+        * This library is created by ZS Associates to analyze the patient level data and it comprises of   various standard PLD metrices.
+        * This library is created for MABI DL TRANSITION Project.
+        """
+        
+Keywords: PLDLIB
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: BSD License

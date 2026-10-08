@@ -1,0 +1,3 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		
+CLAIM_DATE	date	Activity date.		

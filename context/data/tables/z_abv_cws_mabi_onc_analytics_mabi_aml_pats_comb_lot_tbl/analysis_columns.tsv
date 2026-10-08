@@ -1,0 +1,9 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+REGIMEN	varchar	Comma-joined products of the regimen.		Regimen cut.
+REGIMEN_START_DATE	date	Regimen start.		Line start = MIN within LOT.
+REGIMEN_END_DATE	date	Regimen end.		Line end = MAX within LOT.
+BACKBONE	varchar	Backbone product of the regimen.	IC_INELIG: VENCLEXTA, TIBSOVO, REZLIDHIA, IDHIFA, XOSPATA, DAURISMO, L-DAC, HMA; IC_ELIG adds S-DAC/HI-DAC, VANFLYTA, VYXEOS, CYCLOPHOSPHAMIDE, VINCRISTINE, FLUDARABINE, IDARUBICIN, DAUNORUBICIN, MITOXANTRONE, RYDAPT, MYLOTARG, NEXAVAR, ETOPOSIDE, CLADRIBINE, CLOFARABINE, ARSENIC_TRIOXIDE	Backbone cut; QC found no NULL backbones.
+REG_NUM	int	Regimen sequence per patient.		First regimen = 1.
+LOT	int	Line of therapy (cumulative line changes).	1, 2, ...	Line cut.
+TYPE	varchar	legacy rule patient intensity.	IC_ELIG, IC_INELIG	Intensity cut.

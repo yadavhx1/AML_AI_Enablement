@@ -1,0 +1,91 @@
+table_name	column_name	data_type	description	notes
+PHARMACY_EVENTS	PHARMACY_EVENT_ID	String	Hashed unique event identifier	Treatment: Hashed with partner specific salt
+PHARMACY_EVENTS	PATIENT_ID	String	Hashed unique patient identifier	Treatment: Convert to kernel patient ID
+PHARMACY_EVENTS	FILL_DATE	Date	Date prescription was filled	
+PHARMACY_EVENTS	PHARMACY_CHANNEL	String	Retail, Mail Order, Specialty, LTC, Provider, Unknown	
+PHARMACY_EVENTS	PHARMACY_NPI	String	NPI of the pharmacy that filled the prescription for the patient	
+PHARMACY_EVENTS	PRESCRIBER_NPI	String	NPI of the HCP that wrote the prescription for the patient	
+PHARMACY_EVENTS	NDC11	String	NDC11 standardized code for the dispensed drug	
+PHARMACY_EVENTS	BRAND_NAME	String	Brand name	
+PHARMACY_EVENTS	GENERIC_NAME	String	Generic name	
+PHARMACY_EVENTS	ROUTE	String	Route	
+PHARMACY_EVENTS	DAYS_SUPPLY	Integer	Estimated number of days the dispensing will last	
+PHARMACY_EVENTS	QUANTITY	Float	Quantity dispensed	
+PHARMACY_EVENTS	DIAGNOSIS_CODE	String	Diagnosis code	
+PHARMACY_EVENTS	TRANSACTION_RESULT	String	PAID = Final paid claim, REJECTED = Unpaid claim (includes PENDED and REJECTED), REVERSED = PAID claim that was subsequently reversed	
+PHARMACY_EVENTS	REJECT_CODES	String	Concatenation of all available reject codes, separated by |, and searchable with LIKE ('%|xxx|%')	
+PHARMACY_EVENTS	TRANSACTION_NUMBER	Integer	Orders claims within the same day in chronological order	
+PHARMACY_EVENTS	TRANSACTION_STATUS	String	INITIAL, INTERIM, FINAL, STANDALONE	
+PHARMACY_EVENTS	FILL_NUMBER	Integer	Refill number of this dispense. Zero for the first dispense	
+PHARMACY_EVENTS	NUMBER_OF_REFILLS_AUTHORIZED	Integer	Number of refills authorized	
+PHARMACY_EVENTS	DAW_CODE	String	Code indicating whether or not the prescriber's instructions regarding generic substitution were followed	
+PHARMACY_EVENTS	DATE_PRESCRIPTION_WRITTEN	Date	Date prescription was written; generally only available for COB_AVAILABILITY_SOURCE_TYPE = "AVAILABLE"	
+PHARMACY_EVENTS	PRIMARY_KH_PLAN_ID	Integer	Lookup into PLAN table	
+PHARMACY_EVENTS	SECONDARY_KH_PLAN_ID	Integer	Lookup into PLAN table	
+PHARMACY_EVENTS	PATIENT_RESPONSIBILITY	Float	The amount the primary payer requests for the patient to pay	
+PHARMACY_EVENTS	PATIENT_OOP	Float	Patient out of pocket amount, after secondary insurance or coupons or copay cards; Best to only use this for sources where COB is available	
+PHARMACY_EVENTS	TRANSACTION_SOURCE_TYPE	String	LIFECYCLE, PAID ONLY	
+PHARMACY_EVENTS	LAG_SOURCE_TYPE	String	HIGH, LOW	
+PHARMACY_EVENTS	COB_AVAILABILITY_SOURCE_TYPE	String	AVAILABLE, NOT AVAILABLE	
+PHARMACY_EVENTS	PRESCRIBER_CONFIDENCE	String	Indicates if the Presciber is available on the incoming claim (A-KNOWN) or not (Z-UNKNOWN)	
+MEDICAL_EVENTS	MEDICAL_EVENT_ID	String	Hashed unique event identifier	Treatment: Hashed with partner specific salt
+MEDICAL_EVENTS	PATIENT_ID	String	Hashed unique patient identifier	Treatment: Convert to kernel patient ID
+MEDICAL_EVENTS	SERVICE_DATE	Date	Date of service (or the date that service started for multi-day services); For inpatient stays this will be the date of the procedure, if available, but may be the date of the admission	
+MEDICAL_EVENTS	SERVICE_TO_DATE	Date	Date service ended, if available	
+MEDICAL_EVENTS	PROCEDURE_CODE	String	CPT, HCPCS, or ICD-10-PCS	
+MEDICAL_EVENTS	PROCEDURE_CODE_TYPE	String	Procedure code type	
+MEDICAL_EVENTS	MODIFIERS	String	Concatenation of all available modifiers, separated by |, searchable with LIKE ('%|xxx|%')	
+MEDICAL_EVENTS	NDC11	String	Drug code associated with service line	
+MEDICAL_EVENTS	UNITS	Float	Number of units. Highly dependent on the service provided	
+MEDICAL_EVENTS	UNIT_TYPE	String	Type of units (e.g. "EACH", "1 MG", "10 MG", "TBD")	
+MEDICAL_EVENTS	RENDERING_NPI	String	NPI of the rendering HCP associated with the claim; if rendering is not available, this may be the operating or attending NPI	
+MEDICAL_EVENTS	REFERRING_NPI	String	NPI of the referring HCP associated with the claim	
+MEDICAL_EVENTS	BILLING_NPI	String	NPI billing for the associated claim	
+MEDICAL_EVENTS	PLACE_OF_SERVICE	String	HIPAA standard place of service code	
+MEDICAL_EVENTS	REVENUE_CODE	String	Hospital claim revenue code	
+MEDICAL_EVENTS	BILL_TYPE_CODE	String	Institutional claim code that details facility type	
+MEDICAL_EVENTS	VISIT_TYPE	String	Represents the type of Visit	
+MEDICAL_EVENTS	KH_PLAN_ID	Integer	Lookup into PLAN table	
+MEDICAL_EVENTS	DIAGNOSIS_CODES	String	Concatenation of all available diagnosis codes, separated by *, searchable with LIKE ('%|xxx|%') or ('%|C34%) if you want the equivalent of C34* (where * represents a wildcard)	
+MEDICAL_EVENTS	EVENT_SOURCE	String	PROFESSIONAL, INSTITUTIONAL	
+MEDICAL_EVENTS	BILLING_NPI_CONFIDENCE	String	Indicates if we have a billling NPI associated with the claim or not: A - KNOWN, B - HIGH, C - MEDIUM, D - LOW, Z - UNKNOWN	
+PLANS	KH_PLAN_ID	Integer	Unique Plan ID	
+PLANS	PARENT_ID	String	Parent ID (BAP ID)	
+PLANS	PARENT_NAME	String	Parent Name	
+PLANS	PAYER_ID	String	Payer ID (BAP ID)	
+PLANS	PAYER_NAME	String	Payer Name	
+PLANS	PBM_PROCESSOR	String	PBM Processor Name	
+PLANS	INSURANCE_GROUP	String	Major category of coverage type such as Medicaid, Medicare or Commercial	
+PLANS	INSURANCE_SEGMENT	String	Breakdown of group into subcategories such as Managed, Advantage or Group	
+PROVIDERS	NPI	String	National Provider Identifier	
+PROVIDERS	PROVIDER_TYPE	String	BUSINESS or INDIVIDUAL	
+PROVIDERS	FIRST_NAME	String	Provider first name	
+PROVIDERS	LAST_NAME	String	Provider last name	
+PROVIDERS	ORGANIZATION_NAME	String	Organization name	
+PROVIDERS	HCO_PRIMARY_NPI	String	NPI associated with Primary HCO affiliated to the HCP	
+PROVIDERS	PRIMARY_SPECIALTY	String	Primary specialty	
+PROVIDERS	SECONDARY_SPECIALTY	String	Secondary specialty	
+PROVIDERS	PROVIDER_PHONE_NUMBER	String	Most recent provider phone number	
+PROVIDERS	PROVIDER_ADDRESS	String	Provider address	
+PROVIDERS	PROVIDER_CITY	String	Provider city	
+PROVIDERS	PROVIDER_STATE	String	Provider state	
+PROVIDERS	PROVIDER_ZIP	String	Provider 5-digit zip code	
+PATIENT_DEMOGRAPHICS	PATIENT_ID	String	Hashed unique patient identifier	Treatment: Convert to kernel patient ID
+PATIENT_DEMOGRAPHICS	PATIENT_YOB	Date	Date format is 'YYYY-01-01'	
+PATIENT_DEMOGRAPHICS	PATIENT_GENDER	String	Patient gender	
+PATIENT_DEMOGRAPHICS	PATIENT_TOKEN_1	String	Datavant Token 1	Free String inputs: Last name, First Name (1st Initial), DOB, Gender; Treatment: Hashed with partner specific salt
+PATIENT_DEMOGRAPHICS	PATIENT_TOKEN_2	String	Datavant Token 2	Free String inputs: Soundex(Last Name), Soundex(First Name), DOB, Gender; Treatment: Hashed with partner specific salt
+PATIENT_GEOGRAPHY	PATIENT_ID	String	Hashed unique patient identifier	Treatment: Convert to kernel patient ID
+PATIENT_GEOGRAPHY	VALID_FROM_DATE	Date	Initial date when patient is recorded to be located in this state or zip	
+PATIENT_GEOGRAPHY	VALID_TO_DATE	Date	Final date when patient is recorded to be located in this state or zip	
+PATIENT_GEOGRAPHY	PATIENT_STATE	String	The 2-letter abbreviation for the state associated with patient's address for this claim	
+PATIENT_GEOGRAPHY	PATIENT_ZIP	String	The 3-digit zip code of the patient's address for this claim	
+PATIENT_ENROLLMENT	PATIENT_ID	String	Hashed unique patient identifier	Treatment: Convert to kernel patient ID
+PATIENT_ENROLLMENT	START_DATE	Date	Start Date of Payer Span	
+PATIENT_ENROLLMENT	END_DATE	Date	End Date of Payer Span	
+PATIENT_ENROLLMENT	MX_INSURANCE_GROUP	String	COMMERCIAL, MEDICAID, MEDICARE, MEDICARE SUPPLEMENTAL, OTHER, UNKNOWN	
+PATIENT_ENROLLMENT	MX_SEGMENT	String	The insurance groups will be further broken down as follows–COMMERCIAL: GROUP, FEHBP, HIX, TRICARE; MEDICAID: STATE, MANAGED; MEDICARE: FFS, ADVANTAGE; OTHER: IHS, VA; MEDICARE SUPPLEMENTAL: MEDICARE SUPPLEMENTAL; NULL if unknown	
+PATIENT_ENROLLMENT	MX_CLOSED	Boolean	Closed claims indicator. Claims will be considered closed as dependent on how we treat status from the sources, meaning that a claim is closed if/f we have a claim has be submitted to the payer.	
+PATIENT_ENROLLMENT	RX_INSURANCE_GROUP	String	COMMERCIAL, MEDICARE, MEDICAID, OTHER	
+PATIENT_ENROLLMENT	RX_SEGMENT	String	The insurance groups will be further broken down as follows–COMMERCIAL: INTEGRATED, PBM, FEHBP, HIX, TRICARE; MEDICAID: STATE, MANAGED; MEDICARE: MAPD, PDP; OTHER: IHS, VA; NULL if unknown	
+PATIENT_ENROLLMENT	RX_CLOSED	Boolean	Closed claims indicator. Claims will be considered closed as dependent on how we treat status from the sources, meaning that a claim is closed if/f we have a claim has be submitted to the payer.	

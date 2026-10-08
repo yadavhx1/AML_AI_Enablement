@@ -1,0 +1,20 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+FIRST_DX	date	First AML diagnosis.		
+FIRST_TX	date	First AML treatment.		
+LAST_TX	date	Last AML treatment end.		
+DX_LB_ELIG_FLG	int	Mx/Rx activity in both 6-month windows of the 12 months before FIRST_DX.	0, 1	NPS share, SCT, BMB.
+TX_TXL_MX_ELIG_FLG	int	Mx activity in every rolling 6 months FIRST_TX to LAST_TX (MX_ACTIVITY_FINAL_FLAG).	0, 1	SCT, BMB.
+TX_TXL_RX_ELIG_FLG	int	Rx activity in every rolling 6 months FIRST_TX to LAST_TX (RX_ACTIVITY_FINAL_FLAG).	0, 1	SCT, BMB.
+TX_MX_LB_ELIG_VEN_FLG	int	Mx activity in every calendar semester of the 12 months up to VEN_START.	0, 1	VEN-anchored KPIs.
+TX_RX_LB_ELIG_VEN_FLG	int	Rx activity in every calendar semester of the 12 months up to VEN_START.	0, 1	VEN-anchored KPIs.
+TX_TXL_MX_ELIG_VEN_FLG	int	Mx activity in every rolling 6 months VEN_START to VEN_END.	0, 1	VEN-anchored KPIs; passes when no VEN.
+TX_TXL_RX_ELIG_VEN_FLG	int	Rx activity in every rolling 6 months VEN_START to VEN_END.	0, 1	VEN-anchored KPIs; passes when no VEN.
+DX_TX_DIFF_FLG	int	0 <= FIRST_TX - FIRST_DX <= 60 days.	0, 1	NPS share, SCT, BMB.
+TX_POST_DX_FLG	int	FIRST_TX >= FIRST_DX.	0, 1	Data-quality check.
+PATIENT_COHORT	varchar	legacy-rule intensity.	IC_ELIG, IC_INELIG	Production intensity cut.
+PATIENT_COHORT_UPDATED	varchar	new-definition intensity (age + product).	IC_ELIG, IC_INELIG	Only when new definition is asked for.
+SCT_PX_FLG	int	SCT procedure on/after FIRST_DX.	0, 1	SCT rate.
+SCT_DX_FLG	int	SCT-history diagnosis on/after FIRST_DX.	0, 1	SCT rate.
+SCT_DX_PX_FLG	int	Either SCT source.	0, 1	SCT rate numerator.
+ARSENIC_FLG	int	1 = no arsenic trioxide regimen (keep); 0 = arsenic (likely APL).	0, 1	Filter = 1 for every AML KPI.

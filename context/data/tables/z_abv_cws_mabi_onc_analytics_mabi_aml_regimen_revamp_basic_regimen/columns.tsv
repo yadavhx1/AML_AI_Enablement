@@ -1,0 +1,18 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID_RGMN	varchar	Patient key.		Patient grain.
+final_indication_drvd	varchar	Constant 'TEST'.	TEST	Ignore.
+REGIMEN_START_DATE	timestamp	Regimen start (a cut point).		Ordering; LoT gap test.
+REGIMEN_END_DATE	timestamp	Regimen end (next cut point).		LoT gap test.
+regimen_threshold	varchar	Threshold parameter.	5000	
+regimen_length	int	End - start (days).		
+regimen_threshold_flag	int	1 = shorter than threshold (almost always here).	0, 1	Not meaningful at 5000.
+regimen_remove_flag	int	1 = removable (never, clean-up off).	0	
+regimen_valid_flag	varchar	Valid / Invalid vs neighbouring threshold flags.	Valid, Invalid	Not meaningful at 5000.
+clean_up_type	varchar	Clean-up parameter.	no	
+gap_to_next_regimen	int	Next regimen start - this end.		
+REGIMEN	varchar	Alphabetical comma-joined product set.		Regimen cut; backbone input.
+drug_regimen	varchar	Drug-class regimen (constant 'test').		Ignore.
+drug_regimen_2	varchar	drug_regimen with replacements.		Ignore.
+updated_regimen	varchar	REGIMEN replaced by the next regimen for short gap-free regimens.		Not used by the base layer.
+updated_drug_regimen	varchar	As above for drug regimen.		Ignore.
+updated_drug_regimen_2	varchar	As above.		Ignore.

@@ -1,0 +1,4 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID_RGMN	varchar	Patient key.		Patient grain.
+LOW_INTENSITY	int	0 = any IC-Eligible-only product ever, 1 = none.	0, 1	
+PATIENT_INTENSITY_GROUP	varchar	Intensity class used to split the LoT build.	IC_ELIG, IC_INELIG	Intensity cut.

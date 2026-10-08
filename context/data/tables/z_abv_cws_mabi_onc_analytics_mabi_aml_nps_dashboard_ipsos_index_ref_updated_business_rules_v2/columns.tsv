@@ -1,0 +1,6 @@
+column_name	data_type	description	allowed_values	usage_notes
+MONTH_REPO	date	Reported month (first day).		Month grain.
+VEN_NPS_REP	double	Reported Venclexta NPS.		
+TOTAL_NPS_REP	double	Reported total NPS.		
+VEN_NPS_SHA	bigint	SHA Venclexta-backbone lines started in the month.		
+TOTAL_NPS_SHA	bigint	SHA lines started in the month.		

@@ -1,0 +1,6 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+LOT	int	Line of therapy.		Line grain.
+LOT_START_DATE	date	Line start.		DoT start.
+LOT_END_DATE	date	Line end.		DoT end.
+LOT_REGIMEN_GROUP	varchar	Sorted union of products in the line.		Line regimen label.

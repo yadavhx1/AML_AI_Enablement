@@ -1,0 +1,502 @@
+# AML base-layer terms, aliases, abbreviations and code values.
+# Reused from the Venclexta pack taxonomy and extended for the five notebooks.
+terms:
+- term: SHA / Shaw / SHS / Symphony Health
+  maps_to: sha
+  type: system_name
+  definition: 'Company – Symphony Health. SHA is a Switch and collects data from other Switches. Data: APLD for
+    all products in the market – Has the longitudinal journeys of the patients (High quality) – Huge Volume of Data
+    – preferred for directional results (Captures directionality of move from one drug to others in the market).'
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 2
+- term: PLD / APLD
+  maps_to: apld
+  type: abbreviation
+  definition: 'Patient-level data captures encounters of the individual patient with the healthcare system to include:
+    Prescriptions/Diagnoses/Procedures, Physician visits, Hospitalizations, Lab tests and their results, Physician
+    notes, Payer and payment information. Patients cannot be identified; to ensure anonymity of the patient they
+    are assigned a "de-identified" number. However, patients can be tracked longitudinally (over time) using the
+    ''de-identified'' patient ids.'
+  status: defined
+  source: PLD 104 PLD Metrics and Business rules v1.pptx · slide 5; AML SHA Business Rules Guide V5.pptx · slide
+    3
+- term: PoI / Point-of-Interest
+  maps_to: poi
+  type: abbreviation
+  definition: VENCLEXTA Point-of-Interest (PoI) — the patient universe the VAL claims views are scoped to.
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx · Use Case
+- term: Rx
+  maps_to: rx_claim
+  type: abbreviation
+  definition: Rx - Retail prescriptions
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3
+- term: Mx
+  maps_to: mx_claim
+  type: abbreviation
+  definition: Mx – Medical claim
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3
+- term: Hx
+  maps_to: hx_claim
+  type: abbreviation
+  definition: Hx – Hospital claim
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3
+- term: Px
+  maps_to: px_claim
+  type: abbreviation
+  definition: Px – Procedure claim
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3
+- term: Sx
+  maps_to: sx_claim
+  type: abbreviation
+  definition: Sx – Surgery claim
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3
+- term: Dx
+  maps_to: dx_claim
+  type: abbreviation
+  definition: Diagnosis claim. Mx data (CMS-1500) carries Diagnosis (ICD9-10).
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 3; AML SHA Business Rules Guide V5.pptx · slide 5
+- term: RX FACT
+  maps_to: source_type
+  type: code_value
+  definition: A stored value of source_type. Stored values carry the ' FACT' suffix ('RX FACT', 'PX FACT', ...);
+    the dictionary's shorter forms (RX, PX, SX, DX) are loose descriptions. Filter on the suffixed value, e.g. source_type
+    = 'RX FACT'. The full value sets for source_type and claim status were not supplied - confirm observed values
+    with SELECT DISTINCT before filtering on others.
+  status: defined
+  sme_resolution: Q-35
+  source: SHA- Persistency.sql; SHA NPS by Product (HCP Attributes Mapped).txt; SME_ANSWERS/PLD Answers (open sme
+    question 2).docx · Q-35
+- term: source_type
+  maps_to: source_type
+  type: code_value
+  definition: 'Identifies the type of claim/fact, such as pharmacy (RX), procedure (PX), surgical (SX), or diagnosis
+    (DX). Stored values carry the '' FACT'' suffix: ''RX FACT'', ''PX FACT'', etc.'
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx; SME_ANSWERS/PLD Answers (open
+    sme question 2).docx · Q-35
+- term: NCPDP
+  maps_to: ncpdp
+  type: abbreviation
+  definition: 'NCPDP : National Council for Prescription Drug Programs'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 5
+- term: CMS
+  maps_to: cms
+  type: abbreviation
+  definition: 'CMS: Center for Medicare and Medicaid services'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 5
+- term: CMS-1500 / CMS-1450 / 837
+  maps_to: medical_billing_format
+  type: code_value
+  definition: 'MEDICAL (Hx/Mx) CLAIMS Billing Format: CMS-1450 / CMS-1500 form / 837 billing file'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 6
+- term: UB-92 / UB-04
+  maps_to: ub92
+  type: abbreviation
+  definition: 'UB-92: Uniform billing code. Hx data (UB-92, UB-04) — Non-Federal Hospitals.'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 5
+- term: AML
+  maps_to: aml
+  type: code_value
+  definition: Acute myeloid leukemia. "Acute, fast-progressing disease" with "Short treatment cycles" and "High
+    early mortality".
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 16
+- term: MBS
+  maps_to: mbs
+  type: business_term
+  definition: MBS – Is a precursor to AML disease
+  status: defined
+  open_question_ref: Q-38
+  source: Notes_Data Sources_1.pdf · page 4
+- term: APL
+  maps_to: apl
+  type: abbreviation
+  definition: 'ARSENIC_FLG: Patients using Arsenic (likely APL Patients).'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 17
+- term: market_code
+  maps_to: market_code
+  type: code_value
+  definition: 'Identifies the specific brand/indication market basket associated with the claim, such as VENC_CLL
+    or VENC_AML. Valid values on the claims view: VENC_CLL, VENC_AML, VENC_CLL_AML_OTHER (singular; the plural VENC_CLL_AML_OTHERS
+    is a typo). On the Rx/Mx activity frequency tables market_code = ''ONC'' is correct, because those tables are
+    scoped by therapeutic area rather than brand basket - two vocabularies, both correct in place. The activity-table
+    market_code = ''ONC'' filter is REQUIRED; a query that omits it (e.g. the supplied persistency query) has a
+    denominator that is too wide.'
+  status: defined
+  sme_resolution: Q-09
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx; NON PLD VERIFIED QUERIES 1.sql
+    · QUERY 13; SHA- Persistency.sql; SHA NPS by Product (HCP Attributes Mapped).txt; SME_ANSWERS/PLD Answers (open
+    sme question 2).docx · Q-09, Q-10
+- term: source_flag / SOURCE_FLAG
+  maps_to: source_flag
+  type: code_value
+  definition: Identifies the source system/feed from which the claim is derived,(SHA_PTD, PURPLE_LABS or KOMODO).
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx
+- term: source_market / SOURCE_MARKET
+  maps_to: source_market
+  type: code_value
+  definition: Identifies the therapeutic market associated with the claim. ONC restricts analysis to Oncology; "ONC
+    alone does not define a specific brand or indication".
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx
+- term: Episode / Therapy Episode
+  maps_to: episode
+  type: business_term
+  definition: A patient is said to have a continuous therapy of a product if patients fills the prescription for
+    the product continuously within the grace period (60 days). Group consecutive fills/administrations of the same
+    drug into continuous episodes.
+  status: defined
+  source: CLL_LoT_Business_rules_v1_ZS.pptx · slide 4; AML SHA Business Rules Guide V5.pptx · slide 12
+- term: episode_end_date1_drvd / episode_end_date2_drvd / episode_end_date3_drvd
+  maps_to: episode_end_dates
+  type: code_value
+  definition: EPISODE_END_DATE1_DRVD = END OF LAST CLAIM; EPISODE_END_DATE2_DRVD = END OF LAST CLAIM + GRACE; EPISODE_END_DATE3_DRVD
+    = LAST CLAIM.
+  status: defined
+- term: Regimen / NEW_REGIMEN
+  maps_to: regimen
+  type: business_term
+  definition: 'The combination of all the products a patient is treated with at a given point of time constitutes
+    the regimen at that point of time. Column definition: When multiple drugs/therapies taken together (based on
+    the days of supply) the combination is shown as regimen.'
+  status: defined
+  source: CLL_LoT_Business_rules_v1_ZS.pptx · slide 5; Z_ABV_CWS_MABI_ONC_ANALYTICS_MABI_PAYOR_GPO_MABI_TOOL_METRIC_VTX_TBL_AB_new_rule_data_dictionary.xlsx
+- term: Backbone product / back_bone_prod / BACKBONE
+  maps_to: backbone_product
+  type: business_term
+  definition: A backbone product is the foundational drug of a regimen. It can be combined with other drugs within
+    an episode, but when regimen is assigned to a patient it is classified based upon the backbone product being
+    taken. Each regimen may have multiple products. The backbone product is chosen based on a hierarchy, meaning
+    the highest-ranked product in the regimen becomes the backbone.
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slides 14 and 8
+- term: LOT / LoT / lot / NEW_LOT / NORM_REL_LINE / FINAL_LOT / Line of Therapy
+  maps_to: line_of_therapy
+  type: abbreviation
+  definition: Line of Therapy of a patient changes whenever there is a shift to a new product/regimen (based on
+    new to brand from mastered_sob).The line resets when a new therapy starts. FINAL_LOT is "Derived from the KPI
+    regimen line the claim overlaps"; claims with no regimen match are LOT 0.
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx; Z_ABV_CWS_MABI_ONC_ANALYTICS_MABI_PAYOR_GPO_MABI_TOOL_METRIC_VTX_TBL_AB_new_rule_data_dictionary.xlsx
+- term: 1L / 2L / 3L+ / cll_lot_group / lot_group / aml_lot_group
+  maps_to: lot_group
+  type: code_value
+  definition: 'CLL line of therapy group: ''1L'', ''2L'' or ''3L+''. Null before FDA approval: 1L from Jul 2019,
+    2L+ from Jul 2018. AML line of therapy group is null before Jan 2019 (FDA approval floor). In the AML base layer
+    the group is LOT_REF on MABI_AML_PATS_LOT_RR_12M_UPD (1L / 2L+ after the relapse/remission promotion).'
+  status: defined
+- term: LOT_GROUP
+  maps_to: lot_group
+  type: code_value
+  definition: Line-of-therapy group. LOT_GROUP, lot_group and cll_lot_group all use the buckets '1L', '2L', '3L+'.
+    aml_lot_group uses '1L' and '2L+'.
+  status: defined
+  sme_resolution: Q-16
+  source: HCP LEVEL NPS USING SHA+GPO.sql; SME_ANSWERS/PLD Answers (open sme question 2).docx · Q-16
+- term: Grace period / grace / grace_drvd
+  maps_to: grace_period
+  type: business_term
+  definition: Grace Period is the time within which a patient should refill the prescription to be classified as
+    continuing on drug. Grace period is determined by aggregating gaps between Rxs and identifying the value at
+    which the graph stabilizes (typically 85th – 95th %ile). For VEN, grace period is 60 days; grace period is different
+    for different products.
+  status: defined
+  source: PLD 104 PLD Metrics and Business rules v1.pptx · slides 8 and 10; AML SHA Business Rules Guide V5.pptx
+    · slide 12; CLL_LoT_Business_rules_v1_ZS.pptx · slide 4
+- term: Look back / lookback / lookback_drvd
+  maps_to: lookback
+  type: business_term
+  definition: Look Back is the minimum time that a patient should not be on medication to confidently classify as
+    New to Market or New to Brand. Look back is an input to various analysis such as Source of Business, Line of
+    Therapy, etc. Minimum look back is the value after which the proportion of new patients stabilizes.
+  status: defined
+  source: PLD 104 PLD Metrics and Business rules v1.pptx · slides 8 and 9
+- term: Gap / GAP_NXT_NO_DOS
+  maps_to: gap
+  type: business_term
+  definition: Two distinct quantities, both correct for their purpose. (1) Gap (grace-period gap) = Rx Fill Date
+    – Previous Rx Fill Date – Previous Rx Days of Supply; used to determine the grace period. (2) GAP_NXT_NO_DOS
+    = DATEDIFF(NEXT_CLAIM_DATE, CLAIM_DATE), a raw inter-claim interval deliberately computed without days of supply,
+    used as an input to DOS imputation and the compliance base - the column name states the difference.
+  status: defined
+  sme_resolution: Q-41
+  source: PLD 104 PLD Metrics and Business rules v1.pptx · slide 10; SHA NPS by Product (HCP Attributes Mapped).txt;
+    SME_ANSWERS/PLD Answers (open sme question 2).docx · Q-41
+- term: DoS / DOS / Days of Supply / PRODUCT_DAYS_SUPPLY / DAYS_SUPPLY_FINAL
+  maps_to: days_of_supply
+  type: abbreviation
+  definition: Number of days of supply associated with the claim. Values may be missing or unreliable for certain
+    products/claim types and may require product-specific rules or imputation.
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx; SP-SD_Latest.pptx · slide
+    4
+- term: BCL2 / BCL2_INHIBITOR / BCL 2
+  maps_to: bcl2
+  type: abbreviation
+  definition: 'BCL 2 Inhibition. BCL 2: BCL 2 proteins which are anti-apoptotic are over expressed in CLL/AML which
+    prevents cancer cells from dying due to apoptosis. Venclexta: Venclexta inhibits BCL 2 protein thus promoting
+    cancer cell death due to apoptosis. In the backbone grouping BCL2 = VENCLEXTA.'
+  status: defined
+  source: Venclexta Overview.pptx; SHA-Time to Treatment.sql
+- term: HMA
+  maps_to: hma
+  type: abbreviation
+  definition: Hypomethylating agent. In the 2026 AML base layer AZACITIDINE, DECITABINE, INQOVI and ONUREG all resolve
+    to the single backbone value 'HMA' on both hierarchies. A VENCLEXTA <-> HMA switch within 90 days does not start
+    a new line. "HMA – Azacitadine & Decitabine".
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 8; IQVIA_Latest.pptx · slide 10; scripts/Notebooks/Patient
+    Eligibility.ipynb · cells 101, 114
+- term: IC / Intensive Chemo
+  maps_to: intensive_chemo
+  type: abbreviation
+  definition: If a patient has an Intensive Chemo product in their journey> they are classified as IC Eligible patients.
+    They will follow IC Eligible Backbone Hierarchy. If the patient has NO Intensive Chemo product in their journey>
+    they are classified as IC Ineligible patients. They will follow IC Ineligible backbone Hierarchy. Production
+    (legacy rule) stores this as TYPE / PATIENT_COHORT; the age-and-product new definition is PATIENT_COHORT_UPDATED.
+    Product lists are in reference_codes_and_mappings.md.
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 8; original team notebook Patient Eligibility.ipynb
+    · cells 80, 133
+- term: L-DAC / LDAC
+  maps_to: ldac
+  type: code_value
+  definition: 'Low-dose cytarabine. Based on effective dosage: L-DAC= ≤ 20 mg/m² = L-DAC.'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 9
+- term: S-DAC
+  maps_to: sdac
+  type: code_value
+  definition: Standard-dose cytarabine. S-DAC= >20 mg/m² and < 2,000 mg/m².
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 9
+- term: Hi-DAC / HI-DAC
+  maps_to: hidac
+  type: code_value
+  definition: High-dose cytarabine. Hi-DAC= ≥ 2,000 mg/m².
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 9
+- term: Gender factor
+  maps_to: gender_factor
+  type: business_term
+  definition: 'Effective Dosage = Strength / Gender factor. Gender factor= Male: 1.9, Female: 1.6, Else: 1.7.'
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 9
+- term: NPI / NPI_NUMBER / mdm_npi_number
+  maps_to: npi
+  type: abbreviation
+  definition: National Provider Identifier. NPI NUMBER FOR A PARTICULAR HCP. The 'mdm_' prefix "indicates the value
+    has already passed through master data management rather than being the raw claim NPI".
+  status: defined
+  source: NON PLD DATA CATALOG 2.xlsx · Data Dictionary; abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx
+- term: PATIENT_GID / patient_sk / PATIENT_SK / PATIENT_ID / patient_identifier
+  maps_to: patient_gid
+  type: code_value
+  definition: Unique Identifier - Patient Surrogate Key to maintain the granularity in the dimension table at the
+    source flag and source market level. Strip the literal prefix of data source 'SHA_PTDONC' (REPLACE(patient_sk,'SHA_PTDONC',''))
+    to derive PATIENT_GID.
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx
+- term: MDM / mastered
+  maps_to: mdm
+  type: abbreviation
+  definition: 'Master data management. A ''mastered'' column has been standardised upstream: mastered_product_name
+    is the "Mastered (standardised) product name on the claim".'
+  status: defined
+  source: abv_val_ptd_onc_venc_synd_all_claims_combined_fact_vw_Data_Dictionary.xlsx
+- term: SEMESTER / semester / sem_st_date / start_sem
+  maps_to: semester
+  type: business_term
+  definition: 'A half-year reporting period. Derived in code as: month(date) <= 6 -> ''YYYY-01-01''; month(date)
+    > 6 -> ''YYYY-07-01''. On the PCD tables start_sem is the "Semester of the therapy start date (Jan 1 or Jul
+    1)". In OMNI it is written as a label, e.g. ''S1-2026''.'
+  status: defined
+  source: SHA- Persistency.sql; Resonance Data Dictionary for Claude Code Enablement.xlsb · Sample Queries · query
+    9
+- term: FREQUENCY (activity tables)
+  maps_to: activity_frequency
+  type: code_value
+  definition: 'Frequency level at which RX/MX activity is summarized, such as semesterly,yearly. Select the required
+    activity granularity, e.g., frequency = ''semesterly'' for 3-year patient eligibility calculations. NOTE: unrelated
+    to the promotional Frequency KPI in metrics.yaml.'
+  status: defined
+  source: abv_val_ptd_synd_work_mapping_rx_activity_freq_tbl_data_dictionary.xlsx
+- term: OFFSET
+  maps_to: activity_offset
+  type: code_value
+  definition: Offset identifier used to distinguish the relevant activity-frequency period/version. Select the required
+    activity period, commonly OFFSET = '0'.
+  status: defined
+  source: abv_val_ptd_synd_work_mapping_rx_activity_freq_tbl_data_dictionary.xlsx
+- term: SCT / Stem Cell Transplant
+  maps_to: sct
+  type: abbreviation
+  definition: Stem Cell Transplant. "SCT can be available in Dx or Tx tables. Hence, for every patient, SCT date
+    needs to be checked first in Tx table and then in Dx table."
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 20
+- term: BMB / Bone Marrow Biopsy
+  maps_to: bmb
+  type: abbreviation
+  definition: Bone Marrow Biopsy. "BMB claim date should be between the VEN start and VEN end date to ensure the
+    BMB procedure is used to assess the impact of VEN based therapy".
+  status: defined
+  source: AML SHA Business Rules Guide V5.pptx · slide 21
+- term: Venetoclax
+  maps_to: venetoclax
+  type: business_term
+  definition: 'The generic name of Venclexta. Brand Name: Venclexta. Generic Name: Venetoclax. Company: AbbVie.'
+  status: defined
+  source: Venclexta Overview.pptx
+- term: HUE / Impala
+  maps_to: hue
+  type: abbreviation
+  definition: Platform we use is Impala Hadoop User Experience (HUE) for SQL - Data Lake.
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 2
+- term: stencil / pldlib
+  maps_to: pldlib
+  type: system_name
+  definition: The team's PLD library, imported as `stencil`. "Stencil library provides the SOB / episode / regimen
+    builders". Exposes sob, eligibility, episode, regimen, patientSelection, episodePersistency, oneNdone, compliance
+    and patientPersistency.
+  status: defined
+  source: 2026-08-25_CLL_LoT_Report_May26_v1.0_SS_CHECK_Annotated.ipynb · cell 22; scripts/pldlib/pldlib.egg
+    (pldlib 0.0.1, ZS Associates; see context/domain/pldlib.md)
+- term: Data lag / Cadence
+  maps_to: data_lag
+  type: business_term
+  definition: 'Cadence: How frequently do we receive it. Data lag: How old is the data. SME-confirmed values: SP/SD
+    2 weeks lag (weekly refresh); SHA, IQVIA Xponent and GPO 2 months lag (monthly refresh). See context/domain/data_landscape.md.'
+  status: defined
+  source: Notes_Data Sources_1.pdf · page 4; SME_ANSWERS/NON PLD SME Questions.md · Q-51
+- term: Capture rate
+  maps_to: capture_rate
+  type: business_term
+  definition: 'The share of real-world activity a source observes. Stated values: VEN via SP/SD "around 70% data
+    capture"; SHA "Rx data: 65 – 70% data capture" and "Hospital and Procedure data: 30 - 40% data"; GPO "27-28%
+    of VEN data"; Optum "around 8%". "Lower capture rate in the patient level data makes computation of physician
+    level metrics challenging".'
+  status: defined
+  source: Notes_Data Sources_1.pdf · pages 2 and 3; PLD 104 PLD Metrics and Business rules v1.pptx · slide 30
+- term: AML ICD-9 legacy codes / 206.00 / 206.01 / 207.00 / 207.20 / 207.21
+  maps_to: aml_dx_icd9_page
+  type: code_value
+  definition: 'Legacy ICD-9 AML codes the business-rules page lists as counterparts of the 13 ICD-10 subtype
+    codes (205.00, 205.01, 206.00, 206.01, 207.00, 207.20, 207.21). The notebooks do not use 206.x or 207.x:
+    the pool and FIRST_DX use the 37-code set, whose ICD-9 part is 205.x only (OI-14). See
+    reference_codes_and_mappings.md.'
+  status: conflicting
+  source: AML_Base_Business_Rule.html · Section 03; config/common.yaml
+- term: AML base layer / BUSINESS_RULE_CHANGE_VAL / _v2
+  maps_to: aml_base_layer
+  type: system_name
+  definition: The 2026 AML pipeline that builds AML episodes, regimens, backbones, LoT, intensity and eligibility
+    flags into Z_ABV_CWS_MABI_ONC_ANALYTICS.MABI_AML_* tables. Suffix _BUSINESS_RULE_CHANGE_VAL = Aug'26 build;
+    _BUSINESS_RULE_CHANGE_VAL_v2 = May'26 validation build (different patient pool). See key_concepts.md.
+  status: defined
+  source: original team notebook AML_LOT_VAL.ipynb; Patient Eligibility.ipynb
+- term: legacy rule / new definition (AML intensity) / PATIENT_INTENSITY_UPDATED / PATIENT_COHORT_UPDATED
+  maps_to: aml_intensity_rule
+  type: business_term
+  definition: Legacy rule = product-only IC_ELIG/IC_INELIG over the whole journey (production). New definition = age (<= 65)
+    plus line-1 product rules, stored as PATIENT_INTENSITY_UPDATED / PATIENT_COHORT_UPDATED.
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cells 80, 133
+- term: LOT_REF / LOT_REF_INT / MIN_RR_DT / MAX_RR_DIAG_DT
+  maps_to: aml_rr_line_refinement
+  type: code_value
+  definition: AML relapse/remission line refinement. A line-1 regimen that starts on or after the patient's earliest
+    12-month-lookback RR diagnosis (13 RR codes) becomes line 2. LOT_REF = '1L' / '2L+'.
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cells 315-318
+- term: LOT_REGIMEN_GROUP
+  maps_to: lot_regimen_group
+  type: code_value
+  definition: Sorted, de-duplicated union of every product in one AML line of therapy (MABI_AML_PATS_LOT_GROUPING_TBL).
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cell 125
+- term: S-DAC/HI-DAC
+  maps_to: sdac_hidac_backbone
+  type: code_value
+  definition: IC Eligible backbone value used when a regimen contains standard- or high-dose cytarabine (rank 1).
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cell 114
+- term: Filgrastim
+  maps_to: filgrastim
+  type: code_value
+  definition: Supportive-care product, excluded from the AML base layer before DOS/grace assignment. It never creates
+    or extends an episode, regimen or line.
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cell 49
+- term: UNKNOWN (AML backbone)
+  maps_to: aml_backbone_unknown
+  type: code_value
+  definition: new-definition backbone value when no line-1 product is on the applicable rank list. It does not occur in
+    the SQL LoT tables (no NULL backbones there).
+  status: defined
+  source: original team notebook Patient Eligibility.ipynb · cell 134
+- term: Pack notebooks / all five notebooks
+  maps_to: split_notebooks
+  type: system_name
+  definition: 'The five independent notebooks in scripts/Notebooks: AML_LOT_TX_TABLE, AML_LOT_SOB_EPISODE,
+    AML_LOT_REGIMEN, AML_LOT_PATIENT_INTENSITY_LOT, AML_PATIENT_ELIGIBILITY. One KBT each. The sixth notebook,
+    AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated, builds the NPS dashboard (KBT 6).'
+  status: defined
+  source: scripts/Notebooks
+- term: exc_dt
+  maps_to: eligibility_exclusion_date
+  type: code_value
+  definition: First day of the last semester with complete data; caps the VEN calendar-semester lookback flags.
+    Derived in AML_PATIENT_ELIGIBILITY from MAX(claim_date) of VENC_AML RX FACT claims minus 6 months (2025-07-01 in the Aug'26
+    run).
+  status: defined
+  source: scripts/Notebooks/AML_PATIENT_ELIGIBILITY.ipynb
+- term: VEN_START / VEN_END
+  maps_to: ven_start_end
+  type: code_value
+  definition: MIN Venclexta episode start / MAX Venclexta EPISODE_END_DATE1_DRVD per patient, on the first Dx/Tx
+    table. NULL without Venclexta.
+  status: defined
+  source: scripts/Notebooks/AML_PATIENT_ELIGIBILITY.ipynb
+- term: FIRST_DX / FIRST_TX / LAST_TX
+  maps_to: aml_anchor_dates
+  type: code_value
+  definition: First AML diagnosis (37 codes) / first regimen start / last regimen end per patient.
+  status: defined
+  source: scripts/Notebooks/AML_PATIENT_ELIGIBILITY.ipynb
+- term: Legacy IC definition / legacy line backbone
+  maps_to: legacy_line_backbone
+  type: code_value
+  definition: NPS dashboard backbone. The highest-ranked product of the whole line (LOT_REGIMEN_GROUP) on the
+    IC_ELIG (28) or IC_INELIG (11) rank list, by legacy-rule intensity. Named products, UNKNOWN when none is listed.
+    Not the per-regimen KBT 4 BACKBONE.
+  status: defined
+  source: scripts/Notebooks/AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb · cell 29
+- term: BACKBONE_GROUP (NPS dashboard)
+  maps_to: nps_backbone_group
+  type: code_value
+  definition: VENCLEXTA; HMA (AZACITIDINE, DECITABINE, ONUREG, INQOVI); OTHER NOVEL AGENTS (everything else,
+    including UNKNOWN and non-novel products).
+  status: defined
+  source: scripts/Notebooks/AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb · cell 60
+- term: NPI_REGIMEN (initiating HCP)
+  maps_to: nps_initiating_hcp
+  type: code_value
+  definition: NPI on the first backbone-product claim inside the line dates (claim date ascending, NPI descending,
+    claim id).
+  status: defined
+  source: scripts/Notebooks/AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated.ipynb · cell 34

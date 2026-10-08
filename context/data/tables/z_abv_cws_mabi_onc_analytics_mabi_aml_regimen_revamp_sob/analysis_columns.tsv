@@ -1,0 +1,14 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		
+FINAL_PRODUCT_NAME	varchar	Product.		
+CLAIM_ID	varchar	Claim id.		
+CLAIM_DATE	date	Claim date.		
+dos_drvd	int	DOS after de-duplication.		
+gap_from_prev_claim_drvd	int	Claim date - (previous claim date + previous DOS).		Episode break test vs previous grace.
+is_episode_start	int	1 = claim starts an episode.	0, 1	
+sob_lvl7	varchar	Source of business.	NTB NAIVE, NTB SWITCH, NTB ADDON, RS SWITCH, RS ADDON, RS SAME, C	Source-of-business cut.
+sob_lvl4	varchar	SOB rollup.	NTB, SWITCH, REINITIATING, C	
+episode_num_drvd	int	Episode number per patient x product.		
+episode_start_date_drvd	date	Episode start.		
+episode_end_date1_drvd	timestamp	Last claim date + last DOS.		
+episode_length	int	Sum of episode_days.		

@@ -1,0 +1,106 @@
+# AML_LOT_TX_TABLE - patient pool, TX table, DOS and grace.
+# Values copied exactly as coded. Shared keys (schemas, tables, codes.aml_dx_full, products.basket) are in
+# config/common.yaml.
+
+patient_pool:                    # cell 8 (repeated in AML_LOT_PATIENT_INTENSITY_LOT cell 33)
+  dx_code_set: codes.aml_dx_full # reference into common.yaml
+  dx_code_column: SOURCE_DIAGNOSIS_CODE_1
+  count_column: mx_claim_id      # COUNT(DISTINCT mx_claim_id)
+  min_claims_exclusive: 1        # WHERE count_of_claims > 1  (i.e. 2+ claims)
+  source_flag: SHA_PTD           # the only filter; no source_market, no date window
+  temp_view: patient_pool
+
+tx_table:                        # cell 13
+  apply_market_code_filter: false   # `--and market_code = 'VENC_AML'` commented out; pool restriction used instead
+  restrict_to_patient_pool: true
+  product_filter: products.basket
+  column_map:                    # source column -> TX column
+    patient_sk: patient_gid
+    PRODUCT_QTY_DISPENSED: PRODUCT_QTY_DISPENSED
+    PRODUCT_DAYS_SUPPLY: PRODUCT_DAYS_SUPPLY
+    mastered_product_name: final_product_name
+    claim_date: claim_date
+    claim_id: claim_id
+    MDM_NPI_NUMBER: npi_number
+    PROCEDURE_CODE: product_code
+    source_type: native_type
+
+native_type:                     # cell 18: CASE WHEN NATIVE_TYPE LIKE '%RX%' THEN 'RX' ELSE 'PX'
+  rx_pattern: '%RX%'
+  rx_value: RX
+  else_value: PX
+
+dos:                             # cell 18, DOS_FINAL
+  rx:
+    use_claim_days_supply: true
+    fallback_when_null_or_nonpositive: 28
+  px:                            # fixed per product; products absent here get NULL on a PX claim
+    ARSENIC_TRIOXIDE: 28         # 28D CYCLE
+    AZACITIDINE: 28              # 28D CYCLE
+    DECITABINE: 28               # 28D CYCLE
+    CLADRIBINE: 1
+    CLOFARABINE: 1
+    CYCLOPHOSPHAMIDE: 1
+    L-DAC: 1
+    S-DAC: 1
+    HI-DAC: 1
+    DAUNORUBICIN: 1
+    ETOPOSIDE: 1
+    FLUDARABINE: 1
+    IDARUBICIN: 1
+    MITOXANTRONE: 1
+    MYLOTARG: 1
+    VINCRISTINE: 1
+    VYXEOS: 1
+
+grace_days:                      # cell 18, GRACE_VALUE; products absent here get NULL
+  ARSENIC_TRIOXIDE: 60
+  AZACITIDINE: 60
+  DAURISMO: 60
+  DECITABINE: 60
+  IDHIFA: 60
+  L-DAC: 60
+  REZLIDHIA: 60
+  RYDAPT: 60
+  TIBSOVO: 60
+  VENCLEXTA: 60
+  XOSPATA: 60
+  ONUREG: 28
+  VINCRISTINE: 28
+  INQOVI: 28
+  VANFLYTA: 28
+  NEXAVAR: 18
+  CLADRIBINE: 7
+  HI-DAC: 7
+  MYLOTARG: 7
+  S-DAC: 7
+  CLOFARABINE: 5
+  CYCLOPHOSPHAMIDE: 5
+  DAUNORUBICIN: 5
+  ETOPOSIDE: 5
+  FLUDARABINE: 5
+  IDARUBICIN: 5
+  VYXEOS: 5
+  MITOXANTRONE: 3
+
+# cell 5: NDC / procedure-code lookups. They run (and call toPandas) on every execution, but the resulting
+# *_codes strings are never used in all five notebooks - product resolution comes from mastered_product_name.
+product_code_lookups:
+  enabled: false                 # recommended: skip; set true only to reproduce the original cell
+  ndc_filters:                   # dim_product_vw, source_market/source_flag from common.source_filters
+    ONUREG:
+      generic_name_like: ['%AZACITIDINE%']
+      drug_form_in: [TAB, CAP]
+      procedure_desc_like: ['%ONUREG%']
+    INQOVI:
+      generic_name_like: ['%DECITABINE/CEDAZURIDINE%']
+      drug_form_in: [TAB, CAP]
+      procedure_desc_like: ['%INQOVI%', '%DECITABINE/CEDAZURIDINE%']
+    REZLIDHIA:
+      generic_name_like: ['%OLUTASIDENIB%', '%REZLIDHIA%']
+      drug_form_in: []
+      procedure_desc_like: ['%REZLIDHIA%', '%OLUTASIDENIB%']
+    VANFLYTA:
+      generic_name_like: ['%QUIZARTINIB%', '%VANFLYTA%']
+      drug_form_in: []
+      procedure_desc_like: ['%VANFLYTA%', '%QUIZARTINIB%']

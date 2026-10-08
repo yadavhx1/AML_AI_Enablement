@@ -1,0 +1,278 @@
+table_name	column_name	data_type	description	notes
+PTD_PATIENT	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PATIENT	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_PATIENT	PATIENT_HIPAA_BIRTH_YEAR	NUMBER(4)	Year of Birth	HIPAA birth year is adjusted as necessary for patients >=76 only. Pediatric patients show actual birth year.
+PTD_PATIENT	PATIENT_GENDER	VARCHAR(1)	Gender	
+PTD_PATIENT	HH_INCOME	VARCHAR(1)	See Table for definitions	
+PTD_PATIENT	PATIENT_ETHNICITY	VARCHAR(16)		Was previously populated for Immuunology Only - now included for all markets.
+PTD_PATIENT_MEDIGAP	MARKET_CODE	VARCHAR(5)	ONC	
+PTD_PATIENT_MEDIGAP	PATIENT_GID	VARCHAR(22)	Encrypted Encrypted Patient ID	
+PTD_PATIENT_MEDIGAP	MEDIGAP_YEAR	VARCHAR(4)	Year of Medigap coverage	
+PTD_PATIENT_ACTIVITY	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PATIENT_ACTIVITY	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_PATIENT_ACTIVITY	PLAN_ID	VARCHAR(22)	Plan ID of the most frequent primary insurer for the quarter and activity type	Amundsen needs this field. Most frequently occuring plan id for the patient within activity type, year and quarter.
+PTD_PATIENT_ACTIVITY	ACTIVITY_TYPE	VARCHAR(1)	Values: A = All Claims, R = Retail Claims Only For example, A includes all Rx claims in the SHA database, whereas R includes only claims from a retail pharmacy	
+PTD_PATIENT_ACTIVITY	ACTIVITY_YEAR	VARCHAR(4)	Year of database activity. A record will exist in this table if there is activity in the SHA Rx database for the given patient and year combination, based on the given activity type value.	
+PTD_PATIENT_ACTIVITY	ACTIVITY_QUARTER	VARCHAR(1)	Quarter of database activity. A record will exist in this table if there is activity in the SHA Rx database for the given patient and quarter combination, based on the given activity type value. Note this field is associated to the YR field above.	
+PTD_PATIENT_ACTIVITY	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_PATIENT_MPD	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PATIENT_MPD	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_PATIENT_MPD	MPD_YEAR	VARCHAR(4)	2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014	Medicare Part D Year - is updated annually - only through 2013 available at this time
+PTD_PATIENT_MPD	ELIGIBILITY_CLASS	VARCHAR(11)	STD, DUAL, FPL 135, FPL 150, LTC (Long Term Care/Indigent), UNK	Indicates classification for the given year
+PTD_PATIENT_MPD	INDEX_DATE	DATE	Date of 1st MPD claim in respective year	This is regardless of market - so may not be a claim in your data
+PTD_PATIENT_MPD	DEDUCTIBLE_DATE	DATE	Date deductible phase started (when applicable)	This is for the given year
+PTD_PATIENT_MPD	COPAY_DATE	DATE	Date copay/coinsurance phase started	This is for the given year
+PTD_PATIENT_MPD	GAP_DATE	DATE	Date gap phase started (when applicable)	This is for the given year
+PTD_PATIENT_MPD	CATASTROPHIC_DATE	DATE	Date catastrophic phase started (when applicable)	This is for the given year
+PTD_PATIENT_MPD	DAYS_PRIOR_TO_MPD_CLAIM	NUMBER(3)	How many days prior to index MPD claim	This is for the given year
+PTD_PATIENT_MPD	DEDUCTIBLE_DAYS	NUMBER(3)	How many days spent in deductible phase	This is for the given year
+PTD_PATIENT_MPD	COPAY_DAYS	NUMBER(3)	How many days spent in copay phase	This is for the given year
+PTD_PATIENT_MPD	GAP_DAYS	NUMBER(3)	How many days spent in gap phase	This is for the given year
+PTD_PATIENT_MPD	CATASTROPHIC_DAYS	NUMBER(3)	How many days spent in cat phase	This is for the given year
+PTD_PATIENT_MPD	TOTAL_MPD_CLAIM_COUNT	NUMBER(4)	Total MPD claim count for year	This is for the given year and count is regardless of market
+PTD_PATIENT_MPD	AVERAGE_COPAY	NUMERIC(10,2)	Average copay for year	This calculation is for all patient claims in the given year- regardless of market
+PTD_PATIENT_MPD	GAP_COVERAGE_PERCENT	NUMERIC(5,4)	Claims in gap where plan pay > 0 / Claims in gap	This is for the given year and regardless of market
+PTD_PATIENT_MPD	GAP_COVERAGE_PERCENT_BRAND	NUMERIC(5,4)	Brand claims in gap where plan pay > 0 / Brand claims in gap	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_PATIENT_OOP	NUMERIC(10,2)	Sum of patient pay for year	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_DRUG_PAID	NUMERIC(10,2)	Sum of total pay for year	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_BRAND_CLAIM_COUNT	NUMBER(4)	Total brand claim count in year	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_BRAND_THERAPY_COUNT	NUMBER(3)	Total unique brand drug names in year	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_BRAND_PATIENT_OOP	NUMERIC(10,2)	Sum of patient pay for year for brands	This is for the given year and regardless of market
+PTD_PATIENT_MPD	TOTAL_BRAND_DRUG_PAID	NUMERIC(12,2)	Sum of total pay for year for brands	This is for the given year and regardless of market
+PTD_PATIENT_MPD	MPD_PATIENT_PANEL_FLAG	NUMBER(1)	1 = Patient has met conditions which indicate that we have captured all the patient's Rx activity for the year. Tip: Use only these patients when performing longitudinal patient analyses.	Only patients that have complete information should be included in any Medicare Part D Analysis
+PTD_RX_CLAIM_MARKET	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_RX_CLAIM_MARKET	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_RX_CLAIM_MARKET	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_RX_CLAIM_MARKET	DRUG_ID	VARCHAR(13)	Drug ID	This is a unique drug, form, strength identifier. It can be used to join to the drug table - although AbbVie uses product_ndc_code
+PTD_RX_CLAIM_MARKET	PRODUCT_NDC_CODE	VARCHAR(11)	Product NDC Code	AbbVie Key to Drug Table
+PTD_RX_CLAIM_MARKET	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	KEY TO PRACTITIONER DIMENSION
+PTD_RX_CLAIM_MARKET	PHARMACY_ID	NUMBER(18)	Encrypted Unique PharmacyID	KEY TO STORE PANEL
+PTD_RX_CLAIM_MARKET	PRIMARY_PLAN_ID	VARCHAR(22)	Plan ID of the primary insurer. Some claims include derived plan.	
+PTD_RX_CLAIM_MARKET	PRIMARY_ENCRYPTED_GROUP_ID	VARCHAR(22)	Encrypted Group Number of the primary insurer	
+PTD_RX_CLAIM_MARKET	PRIMARY_PATIENT_PAY	NUMERIC(12,3)	Amount patient paid	
+PTD_RX_CLAIM_MARKET	PRIMARY_PLAN_PAY	NUMERIC(12,3)	Amound plan paid	
+PTD_RX_CLAIM_MARKET	SECONDARY_PLAN_ID	VARCHAR(22)	Plan ID of secondary insurer, when applicable *When performing secondary payer related analyses, use only records where PTD_FINAL_CLAIM = 1. **Records where PTD_FINAL_CLAIM = NULL are direct feed claims. Direct feed claims contain no secondary payer information. Some claims include derived plan.	
+PTD_RX_CLAIM_MARKET	SECONDARY_ENCRYPTED_GROUP_ID	VARCHAR(22)	Encrypted Group Number of the secondary insurer	
+PTD_RX_CLAIM_MARKET	SECONDARY_PLAN_PAY	NUMERIC(12,3)	Secondary Plan Pay	
+PTD_RX_CLAIM_MARKET	SECONDARY_PATIENT_PAY	NUMERIC(12,3)	Patient Out of Pocket Cost *This field reflects any buy down that may have occurred, and shows how much the patient paid out of pocket	
+PTD_RX_CLAIM_MARKET	PATIENT_COPAY	NUMERIC(12,3)	Patient Co-Pay Amount	
+PTD_RX_CLAIM_MARKET	USUAL_CUSTOMARY_CHARGE	NUMERIC(12,3)	Usual and Customary Charge amount is the amount charged to cash customers for the prescription exclusive of sales tax or other claimable amounts	Abbvie uses this field in quantity editing (e.g., to determine whether a quantity of 1 indicates 1 syringe or 1 pack of 2 syringes)
+PTD_RX_CLAIM_MARKET	FILL_TYPE	VARCHAR(2)	0 = New Rx, else value = Refill Number	
+PTD_RX_CLAIM_MARKET	DAW_CODE	VARCHAR(1)	DAW Code (Dispense as Written)	Refer to reference table for DAW Description
+PTD_RX_CLAIM_MARKET	REFILL_ATHRZ	NUMBER(3)	Refill Authorized number (number of refills authorized)	
+PTD_RX_CLAIM_MARKET	PRODUCT_QTY_DISPENSED	NUMERIC(11,3)	Quantity	
+PTD_RX_CLAIM_MARKET	PRODUCT_DAYS_SUPPLY	NUMBER(3)	Days Supply	
+PTD_RX_CLAIM_MARKET	DATE_RX_FILLED	DATE	Rx Fill Date	
+PTD_RX_CLAIM_MARKET	DATE_RX_WRITTEN	DATE	Rx Written Date	
+PTD_RX_CLAIM_MARKET	SEQUENCE_NUMBER	NUMBER(22)	Sequence number of claims by patient in order of occurrence	NOTE - this is NOT a date though looks like one - it is YYYYMMSequence.
+PTD_RX_CLAIM_MARKET	CLAIM_STATUS_CODE	VARCHAR(1)	0 = Rejection 1 = Approval 2 = Reversal *When performing rejection and/or reversal rate calculations, use only records where PTD_FINAL_CLAIM = 1. **Records where PTD_FINAL_CLAIM = NULL are direct feed claims. Direct feed claims consist of approvals only. As such, inlcuding them in rejection and/or reversal rate calculations increases the denominator but not the numerator, thus skewing the rates.	
+PTD_RX_CLAIM_MARKET	REJECT_CODE	VARCHAR(3)	if CLAIM_STATUS = 0, this field will contain the reject code, if one exists	Links to PTD_REJECT_CODE_TABLE to get description or group
+PTD_RX_CLAIM_MARKET	REVERSAL_LAG	NUMERIC(15,7)	If CLAIM_STATUS = 2, this field will contain the time between the approval and the reversal	
+PTD_RX_CLAIM_MARKET	ENCRYPTED_RX_NUMBER	VARCHAR(32)	Encrypted Rx Script Number	
+PTD_RX_CLAIM_MARKET	DAYS_TILL_NEXT_FILL	NUMBER(10)	Number of days until next approved claim for same patient and drug. Null if no future activity. Tip: Use with rejected and/or reversed claims to determine if patient filled in future.	
+PTD_RX_CLAIM_MARKET	COPAY_30_DAYS	NUMERIC(12,3)	(PRMRY_PTNT_PAY / DAYS_SUPPLY) * 30	
+PTD_RX_CLAIM_MARKET	SOURCE_OF_BUSINESS_CODE	VARCHAR(1)	N, C, R, S, A (New to Market, Continuing, Reinitiating, Switch, Add)	NOT POPULATED
+PTD_RX_CLAIM_MARKET	NEW_TO_PRODUCT_FLAG	NUMBER(1)	1 = New to Product/Brand	NOT POPULATED
+PTD_RX_CLAIM_MARKET	CONCOMITANT_FLAG	NUMBER(1)	1 = Concomitancy	NOT POPULATED
+PTD_RX_CLAIM_MARKET	PTD_FINAL_CLAIM	NUMBER(1)	1 = PTD Final Status Claim, 0 = Non Final Claim, NULL = Direct Feed Claim *Direct feed claims consist of approvals only. Inlcude in pateint longitudinal studes only, i.e. persistency, adherance, etc…	
+PTD_RX_CLAIM_MARKET	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_RX_CLAIM_MARKET	ENHANCED_PLAN	VARCHAR(1)	Whether either the primary or secondary plan is the result of a plan change due to derived plan: Y/N/null. Null indicates that enhanced plan logic has not been applied.	
+PTD_RX_CLAIM_MARKET	RX_ORIGIN_CODE	VARCHAR(2)	How Rx Was Transmitted To The Pharmacy: 0= Unknown 1= Paper - written Rx obtained via paper 2= Phone - Rx obtained over phone, including interactive voice response 3= Electronic - electronic Rx obtained via script or HL7 Standard Transactions 4= Fax - Rx obtained via fax transmission 5= Pharmacy - Situation in which a new Rx number needs to be created from an existing valid Rx	
+PTD_RX_CLAIM_MARKET	DIAGNOSIS_CODE	VARCHAR(30)	Diagnosis code associated with a prescription claim.	
+PTD_RX_CLAIM_MARKET	INCNT_SRVCS_FEE_PAID_AMT	NUMERIC(12,3)	Fee paid to pharmacy by third-party / manufacturer to counsel patient.	
+PTD_RX_CLAIM_NON_MARKET	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_RX_CLAIM_NON_MARKET	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_RX_CLAIM_NON_MARKET	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_RX_CLAIM_NON_MARKET	DRUG_ID	VARCHAR(13)	Drug ID	
+PTD_RX_CLAIM_NON_MARKET	PRODUCT_NDC_CODE	VARCHAR(11)	Product NDC Code	AbbVie Key to Drug Table
+PTD_RX_CLAIM_NON_MARKET	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	KEY TO PRACTITIONER DIMENSION
+PTD_RX_CLAIM_NON_MARKET	PHARMACY_ID	NUMBER(18)	Encrypted Unique PharmacyID	KEY TO STORE PANEL
+PTD_RX_CLAIM_NON_MARKET	PRIMARY_PLAN_ID	VARCHAR(22)	Plan ID of the primary insurer	
+PTD_RX_CLAIM_NON_MARKET	PRIMARY_PATIENT_PAY	NUMERIC(12,3)	Amount patient paid	
+PTD_RX_CLAIM_NON_MARKET	PRIMARY_PLAN_PAY	NUMERIC(12,3)	Amound plan paid	
+PTD_RX_CLAIM_NON_MARKET	FILL_TYPE	VARCHAR(2)	0 = New Rx, else value = Refill Number	
+PTD_RX_CLAIM_NON_MARKET	PRODUCT_QTY_DISPENSED	NUMERIC(11,3)	Quantity	
+PTD_RX_CLAIM_NON_MARKET	PRODUCT_DAYS_SUPPLY	NUMBER(3)	Days Supply	
+PTD_RX_CLAIM_NON_MARKET	DATE_RX_FILLED	DATE	Rx Fill Date	
+PTD_RX_CLAIM_NON_MARKET	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_DRUG	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_DRUG	DRUG_ID	VARCHAR(13)	Drug ID (Primary Key)	
+PTD_DRUG	PRODUCT_NDC_CODE	VARCHAR(11)	NDC11	
+PTD_DRUG	PRODUCT_NAME	VARCHAR(60)	Drug Name	
+PTD_DRUG	BRAND_GENERIC_INDICATOR	VARCHAR(1)	Brand Generic Indicator	
+PTD_DRUG	BLUE_BOOK_USC_CODE	VARCHAR(5)	Blue Book USC Code	
+PTD_DRUG	BLUE_BOOK_USC_NAME	VARCHAR(60)	Blue Book USC Name	
+PTD_DRUG	DRUG_GENERIC_NAME	VARCHAR(60)	Drug Generic Name	
+PTD_DRUG	DRUG_STRENGTH	VARCHAR(10)	Drug Strength	
+PTD_DRUG	DRUG_FORM	VARCHAR(40)	Drug Form	
+PTD_DRUG	PACKAGE_SIZE	NUMERIC(11,3)	Quantity Per Package	
+PTD_DRUG	PACKAGE_DESCRIPTION	VARCHAR(20)	Description of Package	
+PTD_DRUG	PRODUCT_MANUFACTURER	VARCHAR(15)	Manufacturer Name	
+PTD_DRUG	NDC_START_DATE	DATE	Date NDC Entered Market	
+PTD_DRUG	MARKET_INDICATOR	VARCHAR(1)	Market Indiator 1 or 0 or 2 - 1= Primary Market, 0=Concom Market, 2 = Custom Non Market	
+PTD_PLAN	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PLAN	PLAN_ID	VARCHAR(22)	Plan ID (Primary Key)	
+PTD_PLAN	PLAN_NAME	VARCHAR(250)	Plan Name	
+PTD_PLAN	PLAN_TYPE	VARCHAR(10)	Plan Type	
+PTD_PLAN	PLAN_TYP_SHRT_DESC	VARCHAR(30)	Plan Type Description	
+PTD_PLAN	PLAN_SUB_TYP_SHRT_DESC	VARCHAR(30)	Plan Subtype	
+PTD_PLAN	PLAN_PYMT_TYP_SHRT_DESC	VARCHAR(30)	Payment Type	
+PTD_PLAN	PLAN_ZIP_CODE	VARCHAR(5)	The 5 digit zip code for the Plan	
+PTD_PLAN	NTNL_PAYER_ID	VARCHAR(20)	A Unique Identifier for National Organization	
+PTD_PLAN	NTNL_ORG_NAME	VARCHAR(250)	National Insurer Name	
+PTD_PLAN	NTNL_ORG_TYPE_SHRT_DESC	VARCHAR(30)	National Type	
+PTD_PLAN	NTNL_ROLE_TYP_SHRT_DESC	VARCHAR(30)	Role of the Payer can be any one of the following 1. National, 2.Regional, 3.Location, 4.Not Applicable	
+PTD_PLAN	RGNL_PAYER_ID	VARCHAR(20)	A Unique Identifier for the Regional Organization	
+PTD_PLAN	RGNL_ORG_NAME	VARCHAR(250)	Regional Organization Name	
+PTD_PLAN	RGNL_ORG_TYP_SHRT_DESC	VARCHAR(30)	Regional Organization Type	
+PTD_PLAN	RGNL_ROLE_TYP_SHRT_DESC	VARCHAR(30)	Role of the Payer can be any one of the following 1. National, 2.Regional, 3.Location, 4.Not Applicable	
+PTD_PLAN	MCO_PAYER_ID	VARCHAR(20)	A Unique Identifier for the MCO Organization	
+PTD_PLAN	MCO_ORG_NAME	VARCHAR(250)	Managed Care Organization Name	
+PTD_PLAN	MCO_ORG_TYP_SHRT_DESC	VARCHAR(30)	Managed Care Organization Type	
+PTD_PLAN	MCO_ROLE_TYP_SHRT_DESC	VARCHAR(30)	Role of the Payer can be any one of the following 1. National, 2.Regional, 3.Location, 4.Not Applicable	
+PTD_PLAN	BADMIN_ID	VARCHAR(20)	A Unique Identifier for the Business Administrator	
+PTD_PLAN	BADMIN_ORG_NAME	VARCHAR(250)	Benefit Administrator Name (Includes PBMs and Processors)	
+PTD_PLAN	BADMIN_ORG_TYP_SHRT_DESC	VARCHAR(30)	Benefit Administrator Type	
+PTD_PHYSICIAN	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PHYSICIAN	PHYSICIAN_GID	VARCHAR(22)	Prac Rel GID	A unique identifier - the person - a practitoner has only one Physician Gid
+PTD_PHYSICIAN	PHYSICIAN_KEY	VARCHAR(22)	DS Writer GID (PRIMARY Key)	Key to the other tables - one phyisician may have multiple physician_keys
+PTD_PHYSICIAN	PHYSICIAN_ME_NUMBER	VARCHAR(10)	AMA ME Number or AOA Registration Number	
+PTD_PHYSICIAN	PHYSICIAN_DEA_NUMBER	VARCHAR(80)	DEA Number	
+PTD_PHYSICIAN	PHYSICIAN_LAST_NAME	VARCHAR(60)	Last Name	
+PTD_PHYSICIAN	PHYSICIAN_FIRST_NAME	VARCHAR(25)	First Name	
+PTD_PHYSICIAN	PHYSICIAN_ADDRESS	VARCHAR(100)	Address	
+PTD_PHYSICIAN	PHYSICIAN_CITY	VARCHAR(28)	City	
+PTD_PHYSICIAN	PHYSICIAN_STATE	VARCHAR(2)	State	
+PTD_PHYSICIAN	PHYSICIAN_ZIP_CODE	VARCHAR(5)	Zip Code	
+PTD_PHYSICIAN	PHYSICIAN_AGE	NUMBER(3)	AGE	
+PTD_PHYSICIAN	PHYSICIAN_GENDER	VARCHAR(1)	Gender	
+PTD_PHYSICIAN	PHYSICIAN_SPECIALTY_CODE	VARCHAR(3)	Specialty Code	
+PTD_PHYSICIAN	PHYSICIAN_SPECIALTY_DESC	VARCHAR(75)	Specialty Description	
+PTD_PHYSICIAN	NPI_NUMBER	VARCHAR(10)	NPI (this field is optonal - there is an upcharge for this field)	
+PTD_PHYSICIAN	PDRP_FLAG	VARCHAR(1)	Opt out Indicator	
+PTD_PHYSICIAN	PDRP_FLAG_DATE	DATE	AMA Opt Out Date, if applicable	
+PTD_PHYSICIAN	NO_CONTACT_FLAG	VARCHAR(1)	N indicates physician does not want to be contacted and blank indicates okay to contact	
+PTD_PHYSICIAN	NAME_REG_DATA_AGENT	VARCHAR(10)	Practitioner Data Agent Value	AOA AMA DEA AAOPA KWRN DEAH AMAH
+PTD_PHYSICIAN	ADDRESS_DATA_AGENT	VARCHAR(10)	Practitioner Data Agent Value	AOA AMA DEA AAOPA KWRN DEAH AMAH
+PTD_PHYSICIAN	SPECIALTY_DATA_AGENT	VARCHAR(10)	Practitioner Data Agent Value	AOA AMA DEA AAOPA KWRN DEAH AMAH
+PTD_PHYSICIAN	PHYSICIAN_UNENCRYPT_GID	VARCHAR(22)	The unencrypted value for the PHYSICIAN_GID	
+PTD_DIAGNOSIS	MARKET_CODE	VARCHAR(5)	ONC	Identifes AbbVie Market
+PTD_DIAGNOSIS	RECORD_KEY	VARCHAR(5)	"DIAG"	Indicates these are Diagnosis records
+PTD_DIAGNOSIS	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	Unique Encrypted Patient IDentifier - can link to any othe table that contains Patient_Gid
+PTD_DIAGNOSIS	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_DIAGNOSIS	CLAIM_TYPE	VARCHAR(4)	Claim Type: MX, HX	Mx = physician office or clinic (HCFA), Hx=hospital or institution (UB92) - SEPARATE TABLES IN OLD ABBVIE LAYOUT FOR HCFA AND UB92 - NOTE: Claim_Type in old AbbVie layout referred to In Patient versus Out Patient - that field has been re-named.
+PTD_DIAGNOSIS	SERVICE_FROM_DATE	DATE	Service Date	
+PTD_DIAGNOSIS	DIAGNOSIS_CODE	VARCHAR(30)	Diagnosis Code	Links to PTD_Diagnosis_Code_Table for description
+PTD_DIAGNOSIS	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	
+PTD_DIAGNOSIS	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_DIAGNOSIS	DIAGNOSIS_TYPE_CODE	VARCHAR(10)	ICD Position # - This field flags the type of Dx: 0001=Principal Diagnosis Code 0002=Other Diagnosis Code 1 0003=Other Diagnosis Code 2 0004=Other Diagnosis Code 3 0005=Other Diagnosis Code 4 0006=Other Diagnosis Code 5 0007=Other Diagnosis Code 6 0008=Other Diagnosis Code 7 0009=Other Diagnosis Code 8 0010=Admitting Diagnosis 0011=External Cause Of Injury	
+PTD_DIAGNOSIS	MEDICAL_ACCOUNT_ZIP_CODE	VARCHAR(5)	Provides the zip code of the medical account or practice responsible for the medical claim.	
+PTD_DIAGNOSIS_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifes AbbVie Market
+PTD_DIAGNOSIS_CODE	DIAGNOSIS_CODE	VARCHAR(30)	Diagnosis Code	KEY TO PTD_DIAGNOSIS Table
+PTD_DIAGNOSIS_CODE	DIAGNOSIS_DESCRIPTION	VARCHAR(255)	Diagnosis Description	
+PTD_PROCEDURE	MARKET_CODE	VARCHAR(5)	ONC	Identifes AbbVie Market
+PTD_PROCEDURE	RECORD_KEY	VARCHAR(5)	"PROC"	Indicates these are procedure records
+PTD_PROCEDURE	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	
+PTD_PROCEDURE	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_PROCEDURE	SERVICE_LINE	NUMBER(10)	AKA: SRVC_LINE_SEQ. CLAIM_GID and CLAIM_LINE_ITEM form a composite key. There are one to many line items for each CLAIM_ID	There can be multiple service lines per claim - so you must look at claim_id and service_line for a specific procedure to get the appropriate dates, strenth, units, and charges.
+PTD_PROCEDURE	CLAIM_TYPE	VARCHAR(4)	Claim Type: MX, HX	Mx = physician office or clinic (HCFA), Hx=hospital or institution (UB92) - SEPARATE TABLES IN OLD ABBVIE LAYOUT FOR HCFA AND UB92 - NOTE: Claim_Type in old AbbVie layout referred to In Patient versus Out Patient - that field has been re-named.
+PTD_PROCEDURE	PROCEDURE_CODE	VARCHAR(48)	Procedure Code	KEY TO PTD_PROCEDURE_CODE Table (for Description) CPT AND HCPCS
+PTD_PROCEDURE	STRENGTH	VARCHAR(11)	Strength	CHECK ABBVIE PROCEDURE TABLES
+PTD_PROCEDURE	PROCEDURE_DATE	DATE	Procedure Date	
+PTD_PROCEDURE	SERVICE_FROM_DATE	DATE	Service from date	
+PTD_PROCEDURE	SERVICE_TO_DATE	DATE	Service to date	
+PTD_PROCEDURE	LOCATION_OF_SERVICE_CODE	NUMBER(18)	Place of Service	KEY TO LOCATION_OF_SERVICE_CODE REFERENCE TABLE FOR DESCRIPTION
+PTD_PROCEDURE	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	Primary Physician KEY TO PRACTITIONER DIMENSION
+PTD_PROCEDURE	PHYSICIAN_ROLE	VARCHAR(3)	See Reference Table	Primary Physician Role
+PTD_PROCEDURE	SERVICE_UNIT_NUMBER	NUMBER(15)	Units Administered	
+PTD_PROCEDURE	CALCULATED_SERVICE_UNIT_NUMBER	NUMBER(14)	NUMBER OF UNITS AFTER FACTOR APPLIED	
+PTD_PROCEDURE	SERVICE_CHARGE_AMOUNT	NUMERIC(12,2)	Amount Charged	SERVICE TOTAL CHARGE AMOUNT ON UB92 AND SERVICE CHARGE AMOUNT ON HCFA CLAIM IN PREVIOUS ABBVIE - WILL BE ONE FIELD IN NEW LAYOUT
+PTD_PROCEDURE	SOURCE_OF_PAY_CODE	NUMBER(18)	See Reference Table	KEY TO SOURCE_OF_PAY_CODE TABLE (for Description)
+PTD_PROCEDURE	IN_PATIENT_OUT_PATIENT	VARCHAR(2)	INDICATES WHETHER CLAIM IS INPATIENT OR OUTPATIENT 61 = INPATIENT 60 = OUTPATIENT	
+PTD_PROCEDURE	FILLER	VARCHAR(1)		
+PTD_PROCEDURE	PATIENT_SOURCE_OF_ADMISSION	VARCHAR(1)	See Reference Table	
+PTD_PROCEDURE	PATIENT_TYPE_OF_ADMISSION	VARCHAR(1)	See Reference Table	
+PTD_PROCEDURE	REVENUE_CODE	VARCHAR(48)	See Reference Table	
+PTD_PROCEDURE	PATIENT_DISCHARGE_STATUS	VARCHAR(2)	A code indicating patient discharge. Covers period through service from date. See reference table.	
+PTD_PROCEDURE	CALC_SRVC_UNIT_CEILING	NUMBER(14)		
+PTD_PROCEDURE	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_PROCEDURE	DRUG_ID	VARCHAR(13)	Drug ID	
+PTD_PROCEDURE	PROCEDURE_MODIFIER_1_CODE	VARCHAR(2)	Provides additional information about the procedure - used to supplement information submitted on the claim. For example, this field can provide information on wasted units of a medically administered drug. It can also provide for multiple occurences of a procedure. It can be used to ID biosimilars as well.	
+PTD_PROCEDURE	PROCEDURE_MODIFIER_2_CODE	VARCHAR(2)	Provides additional information about the procedure - used to supplement information submitted on the claim. For example, this field can provide information on wasted units of a medically administered drug. It can also provide for multiple occurences of a procedure. It can be used to ID biosimilars as well.	
+PTD_PROCEDURE	CPT_PROCEDURE_TYPE_CODE	VARCHAR(4)	Provides additional visibility into Hospital-based Procedures. The First two digits identify the record type followed by the sequence of the procedures. Record Types include: 50 - InPatient Accommodation 60 - InPatient Ancillary 61 - OutPatient ancillary	
+PTD_PROCEDURE	DRUG_PRDCT_ID_QLFR_CDE	VARCHAR(2)	Indicates the type of identifier populated in the DRUG_PRDCT_ID - for example, N4 = NDC	
+PTD_PROCEDURE	DRUG_PRDCT_ID	VARCHAR(50)	The ID of the drug as it came in on the claim. Used with DRUG_PRDCT_ID_QLFR CDE field.	
+PTD_PHYSICIAN_ROLE	MARKET_CODE	VARCHAR(5)	ONC	Identifies AbbVie Market
+PTD_PHYSICIAN_ROLE	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_PHYSICIAN_ROLE	SERVICE_LINE	NUMBER(10)	AKA: SRVC_LINE_SEQ. CLAIM_GID and CLAIM_LINE_ITEM form a composite key. There are one to many line items for each CLAIM_ID	
+PTD_PHYSICIAN_ROLE	SERVICE_FROM_DATE	DATE	Service from date	
+PTD_PHYSICIAN_ROLE	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	Physician KEY TO PRACTITIONER DIMENSION
+PTD_PHYSICIAN_ROLE	PHYSICIAN_ROLE	VARCHAR(3)	See Reference Table for Descriptions	
+PTD_PHYSICIAN_ROLE	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_SURGICAL_PROCEDURE	MARKET_CODE	VARCHAR(5)	ONC	Identifies AbbVie Market
+PTD_SURGICAL_PROCEDURE	RECORD_KEY	VARCHAR(5)	"ICD9P"	Indicates these are ICD-BASED or surgical procedure records
+PTD_SURGICAL_PROCEDURE	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	
+PTD_SURGICAL_PROCEDURE	CLAIM_ID	VARCHAR(22)	Encrypted Claim ID	Unique Encrypted Claim IDentifier -Diagnosis and Procedures can be linked by Encrypted Claim ID (Mx claims) - Rx Encrypted Claim ID and Mx or Hx Encrypted Claim IDs CANNOT be linked - they are different.
+PTD_SURGICAL_PROCEDURE	PROCEDURE_TYPE_CODE	VARCHAR(4)	HXPR or 0001 = Principal Procedure Code HX01 or 0002 = Other Procedure Code 1 HX02 or 0003 = Other procedure Code 2 HX03 or 0004 = Other Procedure Code 3 HX04 or 0005 = Other Procedure Code 4 HX05 or 0006 = Other Procedure Code 5	
+PTD_SURGICAL_PROCEDURE	CLAIM_TYPE	VARCHAR(4)	Claim Type: MX, HX	Mx = physician office or clinic (HCFA), Hx=hospital or institution (UB92) - SEPARATE TABLES IN OLD ABBVIE LAYOUT FOR HCFA AND UB92 - NOTE: Claim_Type in old AbbVie layout referred to In Patient versus Out Patient - that field has been re-named.
+PTD_SURGICAL_PROCEDURE	SURGICAL_CODE	VARCHAR(30)	Procedure Code	KEY TO PTD_ICD9_PROCEDURE_CODE Table (for description)
+PTD_SURGICAL_PROCEDURE	PROCEDURE_DATE	DATE	Procedure Date	
+PTD_SURGICAL_PROCEDURE	LOCATION_OF_SERVICE_CODE	NUMBER(18)	Place of Service	KEY TO LOCATION_OF_SERVICE_CODE REFERENCE TABLE FOR DESCRIPTION
+PTD_SURGICAL_PROCEDURE	SOURCE_OF_PAY_CODE	NUMBER(18)	See Reference Table	KEY TO SOURCE_OF_PAY_CODE TABLE (for Description)
+PTD_SURGICAL_PROCEDURE	PHYSICIAN_KEY	VARCHAR(22)	Practitioner ID (DS_WRITER_GID)	KEY TO PRACTITIONER DIMENSION
+PTD_SURGICAL_PROCEDURE	DELETION_FLAG	VARCHAR(1)	1 = Deletion flag else 0	This flag is used for data loading purposes only
+PTD_SURGICAL_PROCEDURE	PROCEDURE_METHOD_CODE	VARCHAR(5)	Indicates whether the procedure is an ICD 9 or 10 Code	
+PTD_SURGICAL_PROCEDURE	MEDICAL_ACCOUNT_ZIP_CODE	VARCHAR(5)	Provides the zip code of the medical account or practice responsible for the medical claim.	
+PTD_PROCEDURE_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PROCEDURE_CODE	PROCEDURE_CODE	VARCHAR(48)	Procedure Code	cpt4 / hcpcs
+PTD_PROCEDURE_CODE	PROCEDURE_DESCRIPTION	VARCHAR(100)	Procedure Description	
+PTD_SURGICAL_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_SURGICAL_CODE	SURGICAL_CODE	VARCHAR(30)	Surgical Procedure Code	
+PTD_SURGICAL_CODE	SURGICAL_DESCRIPTION	VARCHAR(100)	Surgical Procedure Description	
+PTD_NEW_PATIENTS	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_NEW_PATIENTS	PATIENT_GID	VARCHAR(22)	Encrypted Patient ID	
+PTD_NEW_PATIENTS	DATA_MONTH	VARCHAR(6)	Deliverable data end month	
+PTD_PHYSICIAN_PANEL	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_PHYSICIAN_PANEL	PHYSICIAN_GID	VARCHAR(22)	Unique Physician Identifier (Prac Rel Gid)	
+PTD_PHYSICIAN_PANEL	CLAIM_TYPE	VARCHAR(4)	Rx or Mx or Hx	
+PTD_PHYSICIAN_PANEL	ACTIVITY_YEAR	VARCHAR(4)	Year of database activity. A record will exist in this table if there is activity in the SHA database for the given physician and year combination, based on the given claim type value.	
+PTD_PHYSICIAN_PANEL	ACTIVITY_MONTH	VARCHAR(2)	Month of database activity. A record will exist in this table if there is activity in the SHA database for the given physician and month combination, based on the given claim type value. Note this field is associated to the YR field above.	
+PTD_RX_STORE_PANEL	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_RX_STORE_PANEL	PHARMACY_ID	NUMBER(18)	Encrypted Unique Pharmacy ID	
+PTD_RX_STORE_PANEL	PHARMACY_DISTRIBUTION_DESC	VARCHAR(22)	RETAIL, MAIL ORDER / SPECIALTY, OTHERS	
+PTD_RX_STORE_PANEL	ACTIVITY_YEAR	VARCHAR(4)	Year of database activity. A record will exist in this table if there is activity in the SHA database for the given pharmacy and year combination.	
+PTD_RX_STORE_PANEL	ACTIVITY_MONTH	VARCHAR(2)	Month of database activity. A record will exist in this table if there is activity in the SHA database for the given pharmacy and month combination. Note this field is associated to the YR field above.	
+PTD_REJECT_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_REJECT_CODE	REJECT_TYPE_CODE	VARCHAR(3)	Reject Code (Primary Key)	
+PTD_REJECT_CODE	REJECT_TYPE_DESCRIPTION	VARCHAR(100)	Reject Description	
+PTD_REJECT_CODE	REJECT_GROUP_DESCRIPTION	VARCHAR(100)	Attribute used to report Reject Reasons. There are 4 categorized groups: 1.FORMULARY/CONTRACT RELATED 2.NON-FORMULARY/MISSING INFO 3. SYSTEM ERROR 4:UNKNOWN	
+PTD_DAW_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PTD_DAW_CODE	DAW_CODE	VARCHAR(1)	Dispensed as Written Code	
+PTD_DAW_CODE	DAW_DESC	VARCHAR(60)	DAW Code Description	
+LOCATION_OF_SERVICE_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+LOCATION_OF_SERVICE_CODE	LOCATION_OF_SERVICE_CODE	NUMBER(18)	Locaton of service code	
+LOCATION_OF_SERVICE_CODE	LOCATION_OF_SERVICE_DESC	VARCHAR(60)	Location of Service Code Description	
+PHYSICIAN_ROLE_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PHYSICIAN_ROLE_CODE	PHYSICIAN_ROLE_CODE	VARCHAR(3)	Physician Role Code	
+PHYSICIAN_ROLE_CODE	PHYSICIAN_ROLE_DESC	VARCHAR(60)	Physician Role Code Description	
+HH_INCOME_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+HH_INCOME_CODE	HH_INCOME_CODE	VARCHAR(1)	Household Income Code	
+HH_INCOME_CODE	HH_INCOME_DESC	VARCHAR(20)	Household Income Code Description	
+SOURCE_OF_PAY_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+SOURCE_OF_PAY_CODE	SOURCE_OF_PAY_CODE	NUMBER(18)	Source of Pay Code	
+SOURCE_OF_PAY_CODE	SOURCE_OF_PAY_DESC	VARCHAR(60)	Source of Pay Code Description	
+PATIENT_SOURCE_OF_ADMISSION	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PATIENT_SOURCE_OF_ADMISSION	PATIENT_SOURCE_OF_ADMISSION	VARCHAR(1)	Patient Source of Admission Code	
+PATIENT_SOURCE_OF_ADMISSION	PATIENT_SOURCE_OF_ADMISSION_DESC	VARCHAR(60)	Patient Source of Admission Code Description	
+PATIENT_TYPE_OF_ADMISSION	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PATIENT_TYPE_OF_ADMISSION	PATIENT_TYPE_OF_ADMISSION	VARCHAR(1)	Patient Type of Admission Code	
+PATIENT_TYPE_OF_ADMISSION	PATIENT_TYPE_OF_ADMISSION_DESC	VARCHAR(60)	Patient Type of Admission Code Description	
+PATIENT_DISCHARGE_STATUS	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PATIENT_DISCHARGE_STATUS	PATIENT_DISCHARGE_STATUS	VARCHAR(2)	Patient Discharge Status Code	
+PATIENT_DISCHARGE_STATUS	PATIENT_DISCHARGE_STATUS_DESC	VARCHAR(130)	Patient Discharge Status Code Description	
+REVENUE_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+REVENUE_CODE	REVENUE_CODE	VARCHAR(48)	Revenue Code	
+REVENUE_CODE	REVENUE_CODE_DESC	VARCHAR(150)	Revenue Code Description	
+PROCEDURE_MODIFIER_CODE	MARKET_CODE	VARCHAR(5)	ONC	Identifies the AbbVie Market
+PROCEDURE_MODIFIER_CODE	PROCEDURE_MODIFIER_CODE	VARCHAR(2)	This is the cross-reference table for the procedure modifier codes in the procedure table. This field contains the modifier code.	
+PROCEDURE_MODIFIER_CODE	PROCEDURE_MODIFIER_DESC	VARCHAR(1200)	This is the cross-reference table for the procedure modifier codes in the procedure table. This field contains the description of the modifier code.	

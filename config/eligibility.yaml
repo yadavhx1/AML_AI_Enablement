@@ -1,0 +1,115 @@
+# AML_PATIENT_ELIGIBILITY - data cut, activity tables, eligibility flags, final flags table.
+# Values copied exactly as coded.
+
+run:
+  # Cell 11 hardcodes every table name WITHOUT '_v2', so AML_PATIENT_ELIGIBILITY reads the Aug'26 build, not the _v2 tables that
+  # the four AML_LOT notebooks write (OI-02). Override kept to reproduce current behaviour; set to common run.build_suffix to align.
+  build_suffix: _BUSINESS_RULE_CHANGE_VAL
+
+spark:                           # cell 2 (smaller than the four AML_LOT notebooks)
+  executor_instances: '15'
+  executor_memory: 12g
+
+data_cut:                        # cells 5-7
+  # backup_dt and new_data_date run the identical query, so 'backup' and 'new' max dates are always equal.
+  max_date_query:
+    table: schemas.claims_view
+    source_type: RX FACT
+    source_flag: SHA_PTD
+    source_market: ONC
+    market_code: VENC_AML
+  # exc_dt = first day of the calendar semester containing (max_date - 6 months + 1 day):
+  # the last semester with complete data. Aug'26 run: max 2026-06-30 -> exc_dt 2025-07-01.
+  exclusion_offset_months: -6
+  exclusion_offset_days: 1
+  semester_months: 6
+  month_label_format: '%b_%y'    # e.g. JUN_26; computed, unused downstream (backup tables commented out)
+  override_max_date: null        # set 'YYYY-MM-DD' to pin a data cut instead of querying
+
+semester:
+  # How the 6-month periods behind every activity flag are built (logic in config/semester.py):
+  #   calendar: fixed halves, Jan-Jun = 'YYYY - S1', Jul-Dec = 'YYYY - S2', from the claim date
+  #   actual:   rolling 6-month windows from each patient's own anchor date (can cross a year end)
+  # Either one value for every flag, e.g.
+  #   semester_type: calendar
+  # or a value per flag group, as below. These defaults reproduce the notebook as originally built:
+  #   dx_lookback        DX_LB_ELIG_FLG                          (anchor FIRST_DX)
+  #   journey_continuity TX_TXL_MX/RX_ELIG_FLG, *_ELIG_VEN_FLG   (FIRST_TX->LAST_TX, VEN_START->VEN_END)
+  #   ven_lookback       TX_MX/RX_LB_ELIG_VEN_FLG                (anchor VEN_START)
+  semester_type:
+    dx_lookback: actual
+    journey_continuity: actual
+    ven_lookback: calendar
+  frequency: sem
+  first_half_start: '-01-01'     # MONTH(date) <= 6
+  second_half_start: '-07-01'    # MONTH(date) > 6
+  split_month: 6
+
+activity_tables:                 # cells 13-14 (exact-date tables)
+  mx_exact: '{cws}.MABI_MX_ACT_TBL_AML_EXACT_DATES_KA_v2'   # hardcoded _v2 regardless of build suffix
+  rx_exact: '{cws}.MABI_RX_ACT_TBL_AML_EXACT_DATES_KA'      # hardcoded, no suffix
+  mx_source_type_patterns: ['%PX%', '%SX%', '%DX%']
+  rx_source_type_patterns: ['%RX%']
+  mx_union_dx_view: true         # "Dx fact is currently not in VAL all claims" -> UNION dx_fact_curated_vw
+  apply_source_filters: false    # no source_flag/source_market/market_code on these reads
+  # Semesterly frequency tables used by the VEN lookback flags (cells 91, 98).
+  mx_freq: abv_val_ptd_synd_work.mapping_mx_activity_freq_tbl
+  rx_freq: abv_val_ptd_synd_work.mapping_rx_activity_freq_tbl
+  freq_frequency: SEMESTERLY
+  freq_offset: '0'
+  freq_apply_market_code_filter: false    # SME Q-10 requires market_code = 'ONC' elsewhere
+  # Legacy tables named in the TXL activity strings (cells 35, 63, 105, 131). The strings are built but
+  # never used: the TXL flags read the exact-date tables via pandas.
+  legacy_mx_act: SHA_PTD_MABI_ONC_SYND.MABI_MX_ACT_TBL
+  legacy_rx_act: SHA_PTD_MABI_ONC_SYND.MABI_RX_ACT_TBL
+
+first_dx_tx:                     # cell 19
+  dx_code_set: codes.aml_dx_full
+  dx_source_filter: false        # no source_flag on dx_fact_curated_vw
+  dx_date_window: null           # commented: CLAIM_DATE >= '2019-12-01' AND <= '2026-03-06'
+  ven_product: products.venclexta
+  ven_end_column: EPISODE_END_DATE1_DRVD
+
+dx_lookback:                     # cells 25-28 (exact-date windows; period/cal strings unused)
+  windows_months: [6, 12]        # active in [-6m, 0) AND in [-12m, -6m), Mx or Rx
+  require_all_windows: true
+  # Offsets computed in period_to_be_elig but unused by any flag: -18, -24, -36, +6, +12 (MIN), +3 (MAX).
+  unused_offsets_months: [-18, -24, -36, 6, 12]
+  unused_max_offset_months: 3
+
+txl_continuity:                  # cells 33-88 (AML journey) and 103-154 (VEN journey), rolling windows
+  interval_months: 6             # ADD_MONTHS(MIN_CLM_DT, n * 6)
+  pass_if_single_interval: true  # patients with < 6 months span pass automatically
+  journeys:
+    aml: {start: FIRST_TX, end: LAST_TX}
+    ven: {start: VEN_START, end: VEN_END}
+
+ven_lookback:                    # cells 89-102, calendar semesters
+  min_period: MIN_CLM_DT_12M_LB  # VEN_START - 12 months
+  max_period: MIN_CLM_DT         # VEN_START
+  lookback_months: 12
+  semester_spine:                # distinct semesters of VENC_AML 'RX FACT' claims
+    source_type: RX FACT
+    market_code: VENC_AML
+  apply_exclusion_cutoff: true   # PATIENT_TO_BE_ELIG_PERIOD <= exc_dt
+
+final_flags:                     # cell 156
+  dx_tx_diff_min_days: 0
+  dx_tx_diff_max_days: 60
+  arsenic_default_when_missing: 1   # COALESCE(ARSENIC_FLG, 1); 1 = no arsenic
+  # Read without any suffix here, unlike common.tables (which uses _v2 as the four AML_LOT notebooks do).
+  rule_b_table: '{cws}.PATIENT_INTENSITY_BASED_ON_AGE_N_PRODUCT'
+  sct:
+    dx_codes: ['Z94.84', 'V42.82']
+    px_sources:                  # both read with common.source_filters (SHA_PTD, ONC)
+      - {table: schemas.sx_view, column: SURGICAL_code}
+      - {table: schemas.px_view, column: procedure_code}
+    dx_source_filter: false
+    # 51 codes as coded; the V5 guide lists 110 (see reference_codes_and_mappings.md).
+    px_codes: ['38240', '38241', '38243', '38242', '30230G1', '30230G2', '30230G3', '30230G4', '30230U2', '30230U3',
+               '30230U4', '30230Y1', '30230Y2', '30230Y3', '30230Y4', '30233G1', '30233G2', '30233G3', '30233G4',
+               '30233Y1', '30233Y2', '30233Y3', '30233Y4', '30240G1', '30240G2', '30240G3', '30240G4', '30240Y1',
+               '30240Y2', '30240Y3', '30240Y4', '30243G1', '30243G2', '30243G3', '30243G4', '30243Y1', '30243Y2',
+               '30243Y3', '30243Y4', '30250G1', '30250Y1', '30253G1', '30253Y1', '30260G1', '30260Y1', '30263G1',
+               '30263Y1', '4102', '4103', '4105', '4108']
+    on_or_after: FIRST_DX

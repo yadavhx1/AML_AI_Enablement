@@ -1,0 +1,2 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Passing patient.		

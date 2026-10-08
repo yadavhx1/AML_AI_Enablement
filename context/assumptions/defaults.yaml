@@ -1,0 +1,263 @@
+# Non-blocking defaults for the AML base-layer pack.
+# Reused from the Venclexta pack (same ids) and extended for the five notebooks.
+defaults:
+- id: PROCESSED_TABLE_VERSION
+  open_question: Q-01
+  kind: behaviour
+  default: read the view undated, as every supplied verified-query library query does; state the refresh month and
+    the 2-month data lag in the run header
+  why: 'SME resolution (Q-01): abv_val_ptd_onc_venc_synd.all_claims_combined_fact_vw is refreshed every month for
+    SHA and KOMODO with a 2-month data lag (a Sep''26 refresh carries SHA data ending Jul''26). The GPO/EMR tables
+    MABI_PAYOR_GPO_REGIMEN_0602_OCF_EMR_CLAIMS and MABI_PAYOR_GPO_MABI_TOOL_METRIC_VTX_TBL_0602_AB_new_rule are
+    also refreshed monthly with a 2-month lag. No version constant exists, so the run is reproducible within one
+    refresh.
+
+    '
+  declare: 'Assumption: SHA view read undated from the current monthly refresh (2-month lag; data through <MAX(claim_date)>).
+    A restatement between refreshes will not be visible.'
+  assumption_risk: medium
+  sme_status: resolved
+  sme_answer: Monthly refresh for SHA and KOMODO; 2-month lag. 0602 GPO/EMR tables are monthly with a 2-month lag.
+  handling: Use when the user and selected KBT do not provide a more specific value. Continue the analysis and disclose
+    the assumption when material.
+- id: DATA_CUT
+  open_question: null
+  kind: value
+  default: MAX(claim_date) over the filtered population, reported with the figure
+  why: 'The dashboard-dates table that published the cut is not cataloged, so no cut can be read from the pack.
+    The data''s own maximum claim date is derivable at run time and is what {max_date_shs} stood in for.
+
+    '
+  declare: 'Assumption: data cut = MAX(claim_date) = <value>, derived at run time.'
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: Use when the user and selected KBT do not provide a more specific value. Continue the analysis and disclose
+    the assumption when material.
+- id: INHERITED_HISTORY_UNFILTERED
+  open_question: Q-56
+  kind: behaviour
+  default: proceed; no caveat is needed on line-based cuts
+  why: 'SME resolution (Q-56): the upstream APLD build ran on unfiltered history, and the caveat is dropped from
+    every line-based cut.
+
+    '
+  declare: No disclosure required (upstream build confirmed to run on unfiltered history, Q-56).
+  assumption_risk: low
+  sme_status: resolved
+  sme_answer: Construction ran on unfiltered history; drop the caveat from every line-based cut.
+  handling: No disclosure needed.
+- id: CENTRAL_TENDENCY
+  open_question: Q-61
+  kind: both
+  default: always emit BOTH median and mean, together with the distribution (quartiles or a histogram/box summary)
+  why: 'SME resolution (Q-61): prior reporting used both, always, with the distribution shown. This is the convention.
+
+    '
+  declare: Duration reported as median and mean with the distribution shown (team convention, Q-61).
+  assumption_risk: low
+  sme_status: resolved
+  sme_answer: Both, always, with the distribution shown.
+  handling: Apply as the reporting convention; no assumption disclosure needed.
+- id: MIN_CELL_SIZE
+  open_question: Q-62
+  kind: behaviour
+  default: no fixed suppression threshold; inspect small cells case by case, flag small-base cuts explicitly and
+    roll them up where the base is too small to interpret
+  why: 'SME resolution (Q-62): there is no fixed minimum cell size. The analyst inspects small cells case by case,
+    following the source instruction to "check for small-base cuts" ("Can be done semesterly if low n size"). The
+    earlier n=11 floor was an external convention and has been retired. Patient identifiers are never exposed regardless
+    of cell size.
+
+    '
+  declare: 'Small-base cells flagged: <cells> have n below <n>; interpret with caution (no fixed team threshold,
+    Q-62).'
+  assumption_risk: medium
+  sme_status: resolved
+  sme_answer: No fixed threshold; the analyst inspects small cells case by case (check for small-base cuts).
+  handling: Always report the base (n) with each cell, flag small bases, and roll up to a coarser grain (e.g. semester
+    instead of month) when a cut is too thin to read.
+- id: TRUNCATION_CEILING
+  open_question: Q-63
+  kind: behaviour
+  default: flag any eligibility, censoring or anchor-visibility screen that removes more than 20% of the cohort;
+    report the excluded count and show results with and without the screen
+  why: 'SME resolution (Q-63): the exclusion ceiling is a share of the cohort, flagged above 20% removal. SHA-Time
+    to Treatment.sql has no DATA_START_DATE predicate, so the with/without comparison keeps the bias visible.
+
+    '
+  declare: Screen removed <x>% of the cohort (<n> patients)<; above the 20% flag ceiling, Q-63>. Figures shown with
+    and without the screen.
+  assumption_risk: medium
+  sme_status: resolved
+  sme_answer: Ceiling as a share of the cohort - flag above 20% removal.
+  handling: Always report the removal share; call it out prominently when it exceeds 20%.
+- id: ELIGIBILITY_DEFINITION
+  open_question: Q-60
+  kind: behaviour
+  default: 'for procedure rates (BMB, SCT and other "% of VEN patients who had a procedure") the denominator is
+    "Overall #VEN Patients" (patients initiating a VEN regimen in the period); for any other "% of patients who..."
+    rate, the denominator is the named cohort, stated explicitly'
+  why: 'SME resolution (Q-60): "Overall #VEN Patients" is the intended denominator for procedure rates, because
+    every VEN patient could in principle receive one. It is recorded as the EL-4 definition for the procedure-rate
+    family only and must not be borrowed for other rate families (SG-24).
+
+    '
+  declare: 'Procedure-rate denominator = Overall #VEN Patients (EL-4 for procedure rates, Q-60). For non-procedure
+    rates: denominator = the stated cohort, not an eligibility-screened population.'
+  assumption_risk: medium
+  sme_status: resolved
+  sme_answer: Overall
+  handling: Use when the user and selected KBT do not provide a more specific value. Continue the analysis and disclose
+    the assumption when material.
+- id: CLAIMS_LAG
+  open_question: Q-51
+  kind: value
+  default: 'SHA: 2 months (monthly refresh).'
+  why: 'SME resolution (Q-51) replaces the three conflicting documents. Use the lag to decide which recent period
+    is incomplete: e.g. in September 2026 SHA/Xponent/GPO data run to July 2026. Optum/Truven and DDD lags were
+    not restated; the onboarding notes give Optum/Truven 1 month.
+
+    '
+  declare: Latest <n> month(s) incomplete given the 2-month SHA lag (Q-51).
+  assumption_risk: low
+  sme_status: resolved
+  sme_answer: SP/SD 2 weeks lag (weekly refresh); SHA/Xponent/GPO 2 months lag (monthly refresh).
+  handling: Flag or exclude incomplete periods using these lags.
+- id: AML_LOT_RULE_VERSION
+  open_question: OI-03
+  kind: value
+  default: 2026 AML base layer (Rydapt/Mylotarg out of IC-Ineligible backbones, Inqovi/Onureg as HMA and IC-Ineligible,
+    no regimen consolidation, VEN<->HMA same-line exception)
+  why: 'The AML base-layer notebooks (scripts/PLD/AML Base Layer) are the code that runs. They supersede the
+    V5 rules guide hierarchy, grace values and consolidation steps. No formal version id exists; the build is identified
+    by its table suffix.
+
+    '
+  declare: 'AML LoT rules: 2026 base layer (table suffix <_BUSINESS_RULE_CHANGE_VAL | _v2>).'
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: State the version and suffix whenever an AML line, backbone or intensity figure is reported or a trend
+    crosses the change.
+- id: AML_PATIENT_POOL
+  open_question: OI-01
+  kind: value
+  default: read the notebooks' build (2+ AML diagnosis pool, `_v2` tables, 57,697 patients) for KBT 1-4; AML_PATIENT_ELIGIBILITY reads the Aug'26 un-suffixed tables (market_code 'VENC_AML' pool, 84,199)
+  why: 'Two builds use different pools. The Aug''26 build is the most recent and is the only one that carries VEN
+    anchors, the full flag set and HCP affiliations. The May''26 `_v2` build applies the 2+ AML diagnosis pool (57,697
+    patients) that the business-rules page describes. Which one feeds the published KPIs is not stated.
+
+    '
+  declare: 'Assumption: AML base layer read from the <_v2 (2+ Dx pool) | Aug''26 (VENC_AML pool)> build; the two
+    pools differ.'
+  assumption_risk: medium
+  sme_status: unreviewed
+  handling: Use the Aug'26 tables unless the user names the 2+ Dx pool or the _v2 build. Report the suffix and the
+    patient count.
+- id: AML_INTENSITY_RULE
+  open_question: OI-05
+  kind: value
+  default: 'Legacy rule (product-only, whole journey) = `TYPE` / `PATIENT_COHORT`; build setting
+    run.intensity_definition = legacy (config/common.yaml)'
+  why: 'The legacy rule drives the production LoT split. The new definition (age <= 65 + line-1 products,
+    `PATIENT_COHORT_UPDATED`) is used only when the user asks for it.
+
+    '
+  declare: AML intensity = legacy rule (product-only). The new definition (age + product) was not used.
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: Apply the legacy rule everywhere unless the user explicitly asks for the new definition. Then label it
+    "new definition", read the _NEWDEF tables when lines must follow the new definition, and never mix
+    the two in one figure or trend.
+- id: AML_KPI_FLAG_SET
+  open_question: null
+  kind: behaviour
+  default: 'NPS share: ARSENIC_FLG=1, DX_LB_ELIG_FLG=1, DX_TX_DIFF_FLG=1. SCT: those plus TX_TXL_MX_ELIG_FLG=1 and
+    TX_TXL_RX_ELIG_FLG=1. BMB: SCT set plus derived VEN_POST_DX_FLG=1 and 2M_LF=1. Intensity cut on PATIENT_COHORT.'
+  why: 'The V5 guide''s flag-to-KPI table mapped onto the stored columns of MABI_AML_LOT_PAT_ELIG_FLAGS_FINAL. The
+    two BMB-only flags are not stored and are derived from VEN_START, FIRST_DX and the data cut.
+
+    '
+  declare: 'AML gates applied: <flags>; removed <n> (<x>%) patients.'
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: Apply for every AML patient-level KPI and report the share removed by each flag (Q-63).
+- id: AML_SCT_CODE_SET
+  open_question: OI-06
+  kind: value
+  default: 51 SCT procedure codes used by the production SCT_PX_FLG (plus Z94.84 / V42.82 in Dx)
+  why: 'The production flag checks 51 of the 110 codes in the V5 workbook. Reproducing the published flag needs
+    the production list; the 110-code list is a sensitivity.
+
+    '
+  declare: SCT identified with the production 51-code procedure list and 2 Dx codes; the 110-code guide list was
+    not used.
+  assumption_risk: medium
+  sme_status: unreviewed
+  handling: Use the 51-code list by default; show the 110-code sensitivity when SCT is the headline result.
+- id: UNDEFINED_TERM
+  open_question: null
+  kind: behaviour
+  default: adopt the reading the pack's own queries and dictionaries use, and declare it
+  why: 'Terms still marked definition_missing or conflicting in taxonomy.yaml no longer stop a question. The reading
+    implied by the pack''s own usage is evidence, not invention - what is still forbidden is importing an industry-standard
+    meaning the pack never states (GG-09). See context/assumptions/sme_resolutions.md for the terms the SME round
+    resolved.
+
+    '
+  declare: 'Assumption: <term> is not defined in the pack; read here as <reading>, taken from how the pack''s own
+    queries use it (<open question>).'
+  assumption_risk: medium
+  sme_status: unreviewed
+  handling: Use when the user and selected KBT do not provide a more specific value. Continue the analysis and disclose
+    the assumption when material.
+- id: TABLE_SUFFIX_ALIGNMENT
+  open_question: OI-02
+  kind: behaviour
+  default: 'join tables of one build only: all `_v2` (the four AML_LOT notebooks) or all `_BUSINESS_RULE_CHANGE_VAL` (AML_PATIENT_ELIGIBILITY and the Aug''26 build); never mix suffixes in one query'
+  why: 'The four AML_LOT notebooks write `_v2` tables; AML_PATIENT_ELIGIBILITY reads the combined LoT and episode tables without the suffix
+    and writes un-suffixed flag tables, and reads the un-suffixed new-definition table. Mixing them joins two cohorts.
+
+    '
+  declare: Tables read from the <suffix> build only.
+  assumption_risk: high
+  sme_status: unreviewed
+  handling: Before running AML_PATIENT_ELIGIBILITY after the four AML_LOT notebooks, set its table-name globals to the `_v2` names.
+- id: EXC_DT
+  open_question: null
+  kind: value
+  default: first day of the last semester with complete SHA data (data cut minus 6 months, rounded to the semester
+    start)
+  why: 'AML_PATIENT_ELIGIBILITY derives exc_dt from MAX(claim_date) of VENC_AML RX FACT claims; it caps the VEN calendar-semester
+    lookback flags.
+
+    '
+  declare: Eligibility exclusion semester = <exc_dt>.
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: Derive at run time; state it with any VEN lookback flag.
+- id: PROCEDURE_RATE_PERIOD
+  open_question: null
+  kind: value
+  default: semester of VEN_START
+  why: 'SCT and BMB rates are defined per semester of VEN start; "Can be done semesterly if low n size".
+
+    '
+  declare: Rates by semester of Venclexta start.
+  assumption_risk: low
+  sme_status: unreviewed
+  handling: Use semesters unless the user asks for another grain and the base supports it.
+- id: AML_NPS_DASHBOARD_SLICE
+  open_question: OI-17
+  kind: value
+  default: 'DX_LB_ELIG_FLG = 1, DX_TX_DIFF_FLG = 1, PATIENT_COHORT = IC_INELIG, LOT = 1; month of line end
+    (SUMMARY_TIME_BASIS = END) from 2019; semesters = summed months with the share recomputed'
+  why: 'The NPS dashboard notebook (cell 75) states that the published Summary sheet corresponds to this slice,
+    rolled up from months to semesters. The shipped time basis is END.
+
+    '
+  declare: 'Assumption: published NPS dashboard slice (gated IC_INELIG 1L), dated by line end month as shipped.'
+  assumption_risk: medium
+  sme_status: open
+  sme_answer: null
+  handling: Use when the user and selected KBT do not provide a more specific value. Continue the analysis and disclose
+    the assumption when material.

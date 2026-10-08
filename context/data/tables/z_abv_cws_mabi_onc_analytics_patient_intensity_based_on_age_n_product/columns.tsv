@@ -1,0 +1,9 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+LOT_REGIMEN_GROUP	varchar	Line-1 product union.		New definition input.
+LOT_START_DATE	date	Line-1 start.		
+LOT_END_DATE	date	Line-1 end.		
+SOURCE_PATIENT_HIPAA_BIRTH_YEAR	varchar	Birth year (HIPAA-safe).		Age input; do not output at patient grain.
+FIRST_DX	date	First AML diagnosis date.		Age input.
+PATIENT_INTENSITY_UPDATED	varchar	new-definition intensity.	IC_ELIG, IC_INELIG	new definition cut.
+BACKBONE	varchar	new definition line-1 backbone.	named products or UNKNOWN	

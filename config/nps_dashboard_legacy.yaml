@@ -1,0 +1,100 @@
+# AML_NPS_Code_for_LEGACY_definition_of_IC_elig_inelig_Annotated - AML NPS dashboard, legacy
+# IC eligible / ineligible definition. Runs after the full base layer (after AML_PATIENT_ELIGIBILITY). Values copied exactly as coded.
+# Table names in this notebook do not follow run.build_suffix: most carry a personal '_SATEEK' suffix and the
+# outputs use '_UPDATED_BUSINESS_RULES_v2'. They are listed literally (OI-16).
+
+spark:                           # cell 2 (same size as AML_PATIENT_ELIGIBILITY)
+  executor_instances: '15'
+  executor_memory: 12g
+  driver_memory: 4g
+  executor_memory_overhead: 2g
+  app_name: AML
+
+schemas:
+  # cell 6. Differs from the reltio_tbl declared (unused) in common.yaml.
+  reltio_tbl: ABV_MA360_MHCDM.MHCD_RLTN_ALL_ORG_CUSTOMR_WKLY_TBL
+  heme_account: '{cws}.heme_account'                                   # "UPLOADED BY COE"
+  customer_tbl: ABV_DDS_SYND.CUSTOMER_TBL                              # cell 34, inline
+  account_affiliations: ABV_ADS_SYND.DIM_ACCOUNT_AFFILIATIONS_TBL      # cells 39 and 42, inline
+  child_account_decile: '{cws}.MABI_AML_CHILD_ACCOUNT_DECILE'          # cell 45, inline
+
+tables:
+  # Inputs. Cell 26 types the first two inline; cell 68 types the flags table inline.
+  lot_regimen_group: '{cws}.MABI_AML_PATS_LOT_GROUPING_TBL_BUSINESS_RULE_CHANGE_VAL_v2_SATEEK'
+  patient_group: '{cws}.MABI_AML_REGIMEN_REVAMP_PATIENT_COHORT_BUSINESS_RULE_CHANGE_VAL_v2'
+  elig_flags_final: '{cws}.MABI_AML_LOT_PAT_ELIG_FLAGS_FINAL_BUSINESS_RULE_CHANGE_VAL'   # un-suffixed (Aug'26 build)
+  # Declared in cell 6 but not read: updated_tx_tbl only appears in a commented-out FROM; ic_inelig_final is unused.
+  updated_tx_tbl: '{cws}.MABI_AML_REGIMEN_REVAMP_UPDATED_TX_TBL_BUSINESS_RULE_CHANGE_VAL_v2_SATEEK'
+  ic_inelig_final: '{cws}.MABI_AML_IC_INELIG_LOT_FINAL_BUSINESS_RULE_CHANGE_VAL_v2_SATEEK'
+  # Static mapping tables (cell 6)
+  above_brand: '{cws}.MABI_AML_NPS_DASHBOARD_NPI_ABOVE_BRAND_SEGMENT'
+  gne_brand: '{cws}.MABI_AML_NPS_DASHBOARD_NPI_GNE_BRAND_SEGMENT_BKP'   # "bkp with 15k AML Segmented HCPs"
+  ipsos_repo_tbl: '{cws}.MABI_AML_NPS_DASHBOARD_REPOSITORY'             # reported NPS; reload monthly before the run
+  # Outputs
+  reg_npi_aci: '{cws}.MABI_AML_NPS_DASHBOARD_REG_NPI_ACI_MAPPING_UPDATED_BUSINESS_RULES_v2_SATEEK'
+  acct_type_grp_tbl: '{cws}.MABI_AML_NPS_DASHBOARD_1L_IC_INELIG_ACCT_TYPE_GRP_UPDATED_BUSINESS_RULES_v2_SATEEK'
+  npi_hcp_seg_map: '{cws}.MABI_AML_NPS_DASHBOARD_REG_HCP_INFO_MAPPING_UPDATED_BUSINESS_RULES_v2_SATEEK'
+  dash_tbl_final: '{cws}.MABI_AML_NPS_DASHBOARD_1L_IC_INELIG_PBI_DATA_UPDATED_BUSINESS_RULES_v2_SATEEK'
+  nps_lot_month_summary: '{cws}.MABI_AML_NPS_DASHBOARD_LOT_MONTH_NPS_SUMMARY_UPDATED_BUSINESS_RULES_v2_SATEEK'
+  ipsos_index_tbl: '{cws}.MABI_AML_NPS_DASHBOARD_IPSOS_INDEX_REF_UPDATED_BUSINESS_RULES_v2'
+  nps_dash_acct_month_rollup: '{cws}.MABI_AML_NPS_DASHBOARD_1L_IC_INELIG_FINAL_DATA_MONTH_ROLLUP_UPDATED_BUSINESS_RULES_v2'
+
+line_backbone:                   # cell 29 (pandas). Lower rank wins; applied to LOT_REGIMEN_GROUP (whole line).
+  # Same lists as intensity_lot.yaml intensity_rule_b.*_rank. Named products, not 'HMA'.
+  intensity_column: PATIENT_INTENSITY_GROUP    # legacy rule, from the patient cohort table
+  ic_elig_rank: [S-DAC, HI-DAC, VANFLYTA, VYXEOS, CYCLOPHOSPHAMIDE, VINCRISTINE, FLUDARABINE, IDARUBICIN,
+                 DAUNORUBICIN, MITOXANTRONE, RYDAPT, VENCLEXTA, XOSPATA, TIBSOVO, REZLIDHIA, IDHIFA, MYLOTARG,
+                 DAURISMO, ONUREG, INQOVI, NEXAVAR, ETOPOSIDE, CLADRIBINE, CLOFARABINE, AZACITIDINE, DECITABINE,
+                 L-DAC, ARSENIC_TRIOXIDE]
+  ic_inelig_rank: [VENCLEXTA, TIBSOVO, REZLIDHIA, IDHIFA, XOSPATA, DAURISMO, L-DAC, AZACITIDINE, DECITABINE,
+                   INQOVI, ONUREG]
+  non_elig_uses: ic_inelig_rank  # any intensity other than IC_ELIG (including no cohort match) uses the IC_INELIG list
+  unmatched_backbone: UNKNOWN
+
+hcp_attribution:                 # cell 34
+  claims_filter: {source_market: ONC, source_flag: SHA_PTD, market_code: VENC_AML}
+  excluded_products: [FILGRASTIM]
+  require_npi: true              # MDM_NPI_NUMBER IS NOT NULL
+  hma_products: [AZACITIDINE, DECITABINE, ONUREG, INQOVI]
+  claim_order: [CLAIM_DATE ASC, NPI_NUMBER DESC, CLAIM_ID]   # first backbone claim in the line wins
+  customer_active_flag: 'Y'      # CUSTOMER_TBL DDS_ACTIVE_FLAG
+
+account_type:                    # cells 39, 42 and 65; lower rank wins per ABBOTT_CUSTOMER_ID
+  affiliation_filter: {UNIVERSE_NAME: 1VIEW_ONCOLOGY, AFFILIATION_TYPE: HCI-HCP, SALES_FORCE_CODE: ONH2,
+                       DDS_ACTIVE_FLAG: 'Y'}
+  reltio_filter: {ADS_ACTIVE_FLAG: 'Y', VALUATION_INCLUDE_FLAG: 'Y'}   # only for HCPs with no ONH2 affiliation
+  subtype_hierarchy: [Elite Oncology Center, Academic Teaching Hospital, IDN - Academic Affiliated,
+                      IDN - Community Affiliated, Corporate, Other Community, VA, DOD]   # NULL = 9
+  group_map:                     # cell 45
+    Academic: [Elite Oncology Center, Academic Teaching Hospital]
+    Academic Satellite: [IDN - Academic Affiliated]
+    Community: [IDN - Community Affiliated, Corporate, Other Community]
+    Federal: [VA, DOD]
+  larger_community_min_decile: 8 # MAX child-account decile >= 8 -> Larger Community, else / NULL -> Smaller Community
+  group_hierarchy: [Academic, Academic Satellite, Larger Community, Smaller Community, Federal, Not Available]
+  rollup_academic: [Elite Oncology Center, Academic Teaching Hospital]   # cell 97: everything else -> Community
+
+backbone_group:                  # cell 60
+  venclexta: [VENCLEXTA]
+  hma: [AZACITIDINE, DECITABINE, ONUREG, INQOVI]
+  other_label: OTHER NOVEL AGENTS          # every other backbone, including UNKNOWN
+  not_available_label: Not Available        # NULL NPI, customer id, decile ('-' too), segments, account type
+
+summary:                         # cells 72-85
+  start_year: 2019               # SUMMARY_START_YEAR; None keeps every year
+  time_basis: END                # SUMMARY_TIME_BASIS: 'START' or 'END' (regimen = line start or end) - OI-17
+  dims: [DX_LB_ELIG_FLG, DX_TX_DIFF_FLG, PATIENT_COHORT, LOT]
+  flags_from_elig_table: [dx_lb_elig_flg, dx_tx_diff_flg, patient_cohort]   # ARSENIC_FLG is not read
+  unmatched_flag_value: -1
+  unmatched_cohort_label: Not Available
+  published_slice: {DX_LB_ELIG_FLG: 1, DX_TX_DIFF_FLG: 1, PATIENT_COHORT: IC_INELIG, LOT: 1}
+
+indexing:                        # cells 92 and 97; month from REGIMEN_START_DATE
+  reporting_floor: '2019-01-01'
+  repo_month_format: MM/dd/yyyy
+
+exports:                         # USER INPUT REQUIRED: dated file names, edit every run
+  extract_xlsx: 2026-07-24_aml_nps_dash_LEGACY_EXTRACT.xlsx       # cell 74, commented out
+  summary_xlsx: 2026-07-24_aml_nps_summary_by_lot_month_{time_basis}_SATEEK.xlsx   # cell 83
+  index_csv: index_map_Jan26.csv                                  # cell 93
+  acct_index_csv: index_map_acct_Jan26.csv                        # cell 98

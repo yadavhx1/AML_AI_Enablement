@@ -1,0 +1,7 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key (patient_sk, suffix kept).		Patient grain.
+PRODUCT_DAYS_SUPPLY	int	Claim days supply.		DOS input.
+FINAL_PRODUCT_NAME	varchar	Mastered basket product.	28 products + FILGRASTIM	Product cut.
+CLAIM_DATE	date	Claim date.		
+CLAIM_ID	varchar	Claim id.		
+NATIVE_TYPE	varchar	Raw source_type.	e.g. RX FACT, PX FACT	RX/PX split in KBT 1.

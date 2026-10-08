@@ -1,0 +1,8 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain; never output.
+FINAL_PRODUCT_NAME	varchar	Episode product.	28 basket products	Product cut.
+EPISODE_NUM_DRVD	int	Episode sequence per patient and product.		Episode grain.
+EPISODE_START_DATE_DRVD	date	Episode start.		Persistency / DoT start.
+EPISODE_END_DATE1_DRVD	timestamp	Last claim date + last DOS.		Default episode end; regimen cut point.
+episode_length	int	Episode length in days (sum of per-claim episode days).		Duration.
+episode_first_sob	varchar	Source of business of the episode's first claim.	NTB NAIVE, NTB SWITCH, NTB ADDON, RS SWITCH, RS ADDON, RS SAME	Source of business at episode start.

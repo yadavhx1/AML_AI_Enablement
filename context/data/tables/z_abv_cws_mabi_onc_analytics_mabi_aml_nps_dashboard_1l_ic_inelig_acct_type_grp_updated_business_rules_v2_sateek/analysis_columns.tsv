@@ -1,0 +1,4 @@
+column_name	data_type	description	allowed_values	usage_notes
+ABBOTT_CUSTOMER_ID	varchar	Abbott customer id of the HCP.		HCP grain.
+FINAL_ACCOUNT_TYPE_GROUP_2	varchar	Account group.	Academic, Academic Satellite, Larger Community, Smaller Community, Federal, Not Available	
+FINAL_ACCOUNT_TYPE_GROUP_2_HIER	int	Display order of the group.	1-6	

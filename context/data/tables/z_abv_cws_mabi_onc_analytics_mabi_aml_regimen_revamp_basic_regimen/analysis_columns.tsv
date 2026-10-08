@@ -1,0 +1,6 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID_RGMN	varchar	Patient key.		Patient grain.
+REGIMEN_START_DATE	timestamp	Regimen start (a cut point).		Ordering; LoT gap test.
+REGIMEN_END_DATE	timestamp	Regimen end (next cut point).		LoT gap test.
+regimen_length	int	End - start (days).		
+REGIMEN	varchar	Alphabetical comma-joined product set.		Regimen cut; backbone input.

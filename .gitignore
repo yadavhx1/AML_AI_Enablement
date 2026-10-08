@@ -1,0 +1,24 @@
+# Analysis outputs (generated per analysis) - keep only the folder README and scratch placeholder
+outputs/*
+!outputs/README.md
+!outputs/_scratch/
+outputs/_scratch/*
+!outputs/_scratch/.gitkeep
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

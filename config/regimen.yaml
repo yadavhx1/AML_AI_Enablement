@@ -1,0 +1,25 @@
+# AML_LOT_REGIMEN - pldlib stencil.regimen call.
+# Every keyword argument is hardcoded in cell 8. Values copied exactly as coded.
+
+regimen:
+  src_input_tbl: tables.episode_tbl_name    # persisted episode table (was the episode_df temp view in the source notebook)
+  patient_gid_clmn: PATIENT_GID
+  product_name_clmn: FINAL_PRODUCT_NAME
+  episode_start_dt_clmn: EPISODE_START_DATE_DRVD
+  episode_end_dt_clmn: EPISODE_END_DATE1_DRVD
+  collect_type_rgmn_vl: COLLECT_SET
+  collect_type_drg_rgmn_vl: COLLECT_SET
+  regimen_threshold_vl: '5000'
+  clean_up_type_vl: 'no'          # no regimen clean-up / consolidation
+  regimen_removal_vl: '0,1'
+  # Sentinel far-future data end: regimens are never truncated at a data cut.
+  data_end_dt_vl: '2400-01-01'
+  # Placeholders passed as quoted SQL literals; unused for AML (no indication, drug class or product
+  # replacement is applied).
+  final_indication: '"TEST"'
+  drug_class_clmn: '"test"'
+  regimen_replace_clmn: regimen
+  product_replace_from_vls: '"TEST"'
+  product_replace_to_vls: '"TEST"'
+  temp_view: regimen_df
+  output_table: tables.regimen_tbl_name

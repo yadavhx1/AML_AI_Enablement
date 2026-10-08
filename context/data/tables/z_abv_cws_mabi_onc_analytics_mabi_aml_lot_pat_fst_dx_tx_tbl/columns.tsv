@@ -1,0 +1,7 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+FIRST_DX	date	First AML diagnosis.		Diagnosis anchor.
+FIRST_TX	date	First AML treatment (regimen start).		Treatment anchor.
+LAST_TX	date	Last AML treatment end.		Journey end.
+VEN_START	date	First Venclexta episode start.		VEN anchor; VEN Tx start semester.
+VEN_END	date	Last Venclexta episode end.		VEN journey end.

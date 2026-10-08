@@ -1,0 +1,9 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key (patient_sk).		Patient grain.
+LOT	int	Line of therapy.		Line grain.
+REGIMEN	varchar	LOT_REGIMEN_GROUP: sorted union of the products in the line.		Line product label.
+REGIMEN_START_DATE	date	LOT_START_DATE of the line.		Line start.
+REGIMEN_END_DATE	date	LOT_END_DATE of the line.		Line end.
+BACKBONE	varchar	Legacy line backbone (named product).	product names, UNKNOWN	Not the KBT 4 BACKBONE.
+NPI_REGIMEN	varchar	Initiating NPI of the line.		HCP attribution.
+ABBOTT_CUSTOMER_ID_REGIMEN	varchar	Abbott customer id of NPI_REGIMEN.		Account join key.

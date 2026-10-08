@@ -1,0 +1,19 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key (patient_sk).		Patient grain.
+REGIMEN	varchar	LOT_REGIMEN_GROUP: sorted union of the products in the line.		Line product label.
+REGIMEN_START_DATE	date	LOT_START_DATE of the line.		Line start.
+REGIMEN_END_DATE	date	LOT_END_DATE of the line.		Line end.
+BACKBONE	varchar	Legacy line backbone (named product).	product names, UNKNOWN	Not the KBT 4 BACKBONE.
+REG_NUM	int	Copy of LOT.		
+LOT	int	Line of therapy.		Line grain.
+CLAIM_DATE	date	Backbone claim date.		
+CLAIM_ID	varchar	Backbone claim id.		
+FINAL_PRODUCT_NAME_UPDATED	varchar	MASTERED_PRODUCT_NAME of the claim.		
+NPI_NUMBER	varchar	MDM_NPI_NUMBER of the claim.		
+FINAL_PROD_NAME	varchar	Product with AZACITIDINE / DECITABINE / ONUREG / INQOVI as HMA.		Partition of RNO_PROD.
+RNO_PROD	int	Claim order within patient x line x FINAL_PROD_NAME.		
+RNO_DATE	int	Claim order within patient x line.		Not used later.
+RNO_BKBONE	int	RNO_PROD on backbone claims, else 0.		
+NPI_INT	varchar	NPI on the first backbone claim, else NULL.		
+NPI_REGIMEN	varchar	Initiating NPI of the line.		HCP attribution.
+ABBOTT_CUSTOMER_ID_REGIMEN	varchar	Abbott customer id of NPI_REGIMEN.		Account join key.

@@ -1,0 +1,12 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID_RGMN	varchar	Patient key.		
+REGIMEN	varchar	Regimen products.		
+REGIMEN_START_DATE	date	Regimen start.		
+REGIMEN_END_DATE	date	Regimen end.		
+REG_LEN	int	End - start (days).		
+REG_NUM	int	Regimen sequence.		
+BACKBONE	varchar	Backbone.	24 values incl. S-DAC/HI-DAC, HMA, ARSENIC_TRIOXIDE	
+PREV_BACKBONE	varchar	Previous backbone.		
+PREV_GAP	int	Days since previous regimen end.		
+LINE_CHANGE	int	New-line flag.	0, 1	
+LOT	int	Line of therapy.		

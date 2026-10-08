@@ -1,0 +1,9 @@
+column_name	data_type	description	allowed_values	usage_notes
+PATIENT_GID	varchar	Patient key.		Patient grain.
+LOT	int	Line of therapy.		Line grain.
+BACKBONE	varchar	Legacy line backbone.	product names, UNKNOWN	
+NPI_REGIMEN	varchar	Initiating NPI.		
+UNI_DECILE	varchar	HCP decile (above-brand table).	decile, -	
+ABOVE_BRAND_SEGMENT	varchar	Above-brand HCP segment.		
+EXECUTION_SEGMENT	varchar	AML execution (GNE) segment.		
+FINAL_ACCOUNT_TYPE_2	varchar	Account subtype.	Elite Oncology Center ... DOD	
