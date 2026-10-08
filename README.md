@@ -1,4 +1,4 @@
-# AML base-layer KBT-first analytics context pack
+# AML base-layer KBT-first analytics context pack **[View Business Rules](https://yadavhx1.github.io/AML_AI_Enablement/AML_Base_Business_Rule.html)**
 
 This pack is for Claude Code in VS Code. It follows the layout of the Venclexta KBT-first pack and
 covers the AML base layer and the AML NPS dashboard: six KBTs, one per notebook, with targeted context
